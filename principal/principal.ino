@@ -192,15 +192,11 @@ void setup()
 void loop() 
 {
   esp_task_wdt_reset();
-
-  if(millis() - timer_sife >= 1000) {
-    timer_sife = millis();
-    Gerenciamento_Carga();
-  }
+  Gerenciamento_Carga();
 
   if(primeiro_ciclo && millis() > 8000) {
     primeiro_ciclo = false;
-    Gerenciamento_Carga();
+
     processarLeituraEnvio();
     timer_ciclo = millis();
   }

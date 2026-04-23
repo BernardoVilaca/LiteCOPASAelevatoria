@@ -67,6 +67,8 @@ bool conectarRedeEbroker() {
     
     client.setServer(MQTT_SERVER, MQTT_PORT);
     client.setBufferSize(4096);
+    client.setKeepAlive(45);
+    client.setSocketTimeout(30);
     String clientId = "SIFE_PLANTA_" + String(esp_random(), HEX);
 
     Serial.println("  -> [REDE] Conectando ao Servidor MQTT na nuvem...");
@@ -74,6 +76,8 @@ bool conectarRedeEbroker() {
     if (client.connect(clientId.c_str())) {
         Serial.println("  -> [REDE] SUCESSO! Link com o servidor estabelecido.");
         return true;
+    } else {
+        Serial.printf("Erro ao conectar ao servidor MQTT. Código: %i\n", client.state());
     }
     return false;
 }

@@ -14,7 +14,7 @@
 // ========================================================================================================
 // --- Mapeamento de Hardware ---
 // ========================================================================================================
-#define MOS_PIM      23             // Pino de controle do MOSFET (vai ligado em E, de enable)
+#define MOS_PIM      15             // Pino de controle do MOSFET (vai ligado em E, de enable)
 #define PWM_PIN      12             // Pino de saída do PWM (vai ligado em P, de PWM)
 #define WAKEUP_PIN GPIO_NUM_34      // Pino que detecta o retorno da rede AC
 //*PS: Wakeu_Pin já está ligado no lugar que precisa automaticamente na SIPCBAN, é um recurso de hardware já disponivel
@@ -28,7 +28,7 @@ Adafruit_INA219 ina219_2(0x44);         // INA de entrada/bateria
 #define SEGUNDOS_PARA_MICROSEGUNDOS 1000000ULL  /* Fator de conversão */
 #define TEMPO_DE_SONO_LOADED  600                       /* Tempo que ele vai dormir com a bateria em estado ok(em segundos) */ 
 #define TEMPO_ENVIO_AC 120
-#define TEMPO_ENVIO_BATERIA 120
+
 //_________________________________________________________________________________________________________
 //--------------------------------------Flags--------------------------------------------------------------
 //_________________________________________________________________________________________________________
@@ -529,7 +529,7 @@ void comandos()
     case ModoBateria: // MODO BATERIA (SEM REDE)
        ControleMosfet(DESLIGA_MOS);   //Mantém o Mosfet desligado para que a energia, ao voltar, não seja aplicada diretamente na bateria sem devido controle
        intervalo2 = 5000;   // Intervalo de leitura dos INA219
-       Bit_Carga = 0;       // Coloca o PWM no mínimo para que caso a rede AC volte, o sistmea não inicializae com tensão máxima 
+       Bit_Carga = 1023;       // Coloca o PWM no máximo para que caso a rede AC volte, o sistmea não inicializae com tensão máxima 
        Monitora();          // Importante: Monitora continua rodando para detectar se a fonte voltou  
        
        if (millis() - dormir > Sleep_Timer && loadvoltage1 > tensaoShutdown && fonte == FonteOFF) {
