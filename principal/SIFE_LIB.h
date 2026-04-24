@@ -26,7 +26,7 @@ Adafruit_INA219 ina219_2(0x44);         // INA de entrada/bateria
 // ========================================================================================================
 //____________________________________Configurações Deep sleep_____________________________________________
 #define SEGUNDOS_PARA_MICROSEGUNDOS 1000000ULL  /* Fator de conversão */
-#define TEMPO_DE_SONO_LOADED  600                       /* Tempo que ele vai dormir com a bateria em estado ok(em segundos) */ 
+#define TEMPO_DE_SONO_LOADED  180                       /* Tempo que ele vai dormir com a bateria em estado ok(em segundos) */ 
 #define TEMPO_ENVIO_AC 120
 
 //_________________________________________________________________________________________________________

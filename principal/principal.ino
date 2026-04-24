@@ -154,12 +154,12 @@ void processarLeituraEnvio()
 /******************************************************************************************************************/
 void setup() 
 {
+
   pinMode(thermoCS, OUTPUT);
   digitalWrite(thermoCS, HIGH);
   SPI.begin(thermoSCK, thermoSO, -1, thermoCS);                  
   SIFE_Setup();
   Serial.begin(115200);
-  
   // Dá um pulso no PWRKEY do modem.
   pinMode(MODEM_PWRKEY, OUTPUT);
   digitalWrite(MODEM_PWRKEY, LOW);
