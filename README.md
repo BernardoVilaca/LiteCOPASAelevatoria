@@ -3,6 +3,9 @@
 ## Descrição do Projeto
 O **LiteCOPASAelevatoria** é um sistema de monitoramento remoto desenvolvido para sistemas de elevação de água. O projeto baseia-se em um microcontrolador ESP32 que realiza a leitura de parâmetros físicos por meio de conversores de sensores industriais, e leitura de sensores dedicados do projeto, e transmite os dados via telemetria utilizando o protocolo MQTT sobre uma rede móvel.
 
+## Descrição da planta de instalação
+Disponível em "COMO_CONSTRUIDO_ELEVATÓRIA_COPASA_MORRO_DOS_PINTOS (3).pdf"
+
 ## Funcionalidades Principais
 * **Monitoramento Contínuo:** Leitura de temperatura, parâmetros elétricos e vibracionais em tempo real.
 * **Autogerenciamento de Energia** Atuação em conjunto com Sistema Inteligente de Fornecimento de Energia.
