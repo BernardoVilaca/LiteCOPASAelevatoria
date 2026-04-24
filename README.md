@@ -1,5 +1,18 @@
 # LiteCOPASAelevatoria
-Projeto de iniciação científica em parceria com a COPASA
 
-Fase atual:
-https://www.overleaf.com/read/qpjtfvjhfznz#233d8c
+## Descrição do Projeto
+O **LiteCOPASAelevatoria** é um sistema de monitoramento remoto desenvolvido para sistemas de elevação de água. O projeto baseia-se em um microcontrolador ESP32 que realiza a leitura de parâmetros físicos por meio de conversores de sensores industriais, e leitura de sensores dedicados do projeto, e transmite os dados via telemetria utilizando o protocolo MQTT sobre uma rede móvel.
+
+## Funcionalidades Principais
+* **Monitoramento Contínuo:** Leitura de temperatura, parâmetros elétricos e vibracionais em tempo real.
+* **Autogerenciamento de Energia** Atuação em conjunto com Sistema Inteligente de Fornecimento de Energia.
+* **Telemetria MQTT:** Transmissão de dados via protocolo MQTT, permitindo integração com painéis de visualização e bancos de dados, a partir do Node-Red.
+* **Conectividade Via telefonia móvel:** Autenticação e conexão em redes 4G.
+* **Eficiência Energética:** Implementação de rotinas de *Deep Sleep* no ESP32 para conservação de energia.
+
+## Versão atual do código:
+Disponível na pasta "Principal"
+
+## Autores
+* **Bernardo Batista Vilaça**
+* **Felipe Augusto Ramos Diniz**
