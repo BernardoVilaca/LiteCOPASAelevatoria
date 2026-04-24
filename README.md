@@ -13,8 +13,14 @@ Disponível em "COMO_CONSTRUIDO_ELEVATÓRIA_COPASA_MORRO_DOS_PINTOS (3).pdf"
 * **Conectividade Via telefonia móvel:** Autenticação e conexão em redes 4G.
 * **Eficiência Energética:** Implementação de rotinas de *Deep Sleep* no ESP32 para conservação de energia.
 
-## Versão atual do código:
-Disponível na pasta "Principal"
+## Versão atual do código
+Disponível na pasta "principal", nele estará subdividido em: principal/principal.ino, que é a main do projeto presente atualmennte no ESP32, a principal/SIFE_LIB.h, que é a versão do LiteCOPASAelevatoria para a biblioteca do Sistema Inteligente de Fornecimento de Energia integrado ao projeto. E ainda, principal/Connectar_Desconectar.h, que tem as configurações de uso do envio de dados via rede móvel.
+
+## Resultados e relatórios
+Disponível em "Testes&Resultados"
+
+## Referências Teóricas
+Disponível em "Referências", e "ReferênciasInternasLITE", estas sendo as usadas pelo Orientador do projeto, Adriano Borges, em suas aulas no ensino técnico.
 
 ## Autores
 * **Bernardo Batista Vilaça**
