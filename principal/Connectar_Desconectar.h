@@ -1,19 +1,23 @@
 #ifndef CONNECTAR_DESCONECTAR_H
 #define CONNECTAR_DESCONECTAR_H
 
-#define NUM_AMOSTRAS 512      
-#define TAMANHO_BACKUP 64     
-#define TINY_GSM_MODEM_A7670
+// Definições gerais *************************************************************************************************
+#define NUM_AMOSTRAS            512     // Nº amostras transformada rápida de Fourier 
+#define TAMANHO_BACKUP          64     // Nº backups
+#define TINY_GSM_MODEM_A7670            // Modelo SIMGSM
+#define BUFFER_MQTT_GSM         4096
+#define KEEP_ALIVE_S            45      // Keep Alive para PINGREQ/PINGRESP
+#define SOCKET_TIMEOUT_S        30      // Socket Timeout Broker MQTT
 
+// Bibliotecas *************************************************************************************************
 #include <Arduino.h>
 #include <TinyGsmClient.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h> 
 #include "ESPEncrypt.h"
-// ========================================================================================================
-// --- Variáveis GPRS ---
-// ========================================================================================================
+
+// GSM - GPRS LTE *********************************************************************************************
 const char apn[]      = "zap.vivo.com.br"; 
 const char gprsUser[] = "vivo";
 const char gprsPass[] = "vivo";
@@ -22,13 +26,19 @@ const char gprsPass[] = "vivo";
 static TinyGsm modem(SerialAT);
 static TinyGsmClient gsmClient(modem);
 static PubSubClient client(gsmClient);
-
+// Define os pinos do Modem ******************************************
+#define MODEM_RX        16  
+#define MODEM_TX        17  
+#define MODEM_PWRKEY    4
+#define MINUTES_FACTOR  6000
+#define BAUD_RATE       115200
+// Broker MQTT *************************************************************************************************
 #define MQTT_SERVER "broker.hivemq.com" 
 const int MQTT_PORT = 1883; 
-static char mqttMsgBuffer[4096];
-// ========================================================================================================
-// --- Mapeamento dos tópicos MQTT ---
-// ========================================================================================================
+static char mqttMsgBuffer[BUFFER_MQTT_GSM];
+const int CHUNK_SIZE = 64;
+
+// Tópicos MQTT *************************************************************************************************
 #define TOPIC_VIBRA_S1_REAL   "sife_felipe/vibracao/sensor1/dados"
 #define TOPIC_VIBRA_S2_REAL   "sife_felipe/vibracao/sensor2/dados"
 #define TOPIC_VIBRA_S3_REAL   "sife_felipe/vibracao/sensor3/dados"
@@ -36,56 +46,117 @@ static char mqttMsgBuffer[4096];
 #define TOPIC_TEMP_REAL       "sife_felipe/temperatura/dados"
 #define TOPIC_ENERGIA_REAL    "sife_felipe/energia/dados"
 
-
 static StaticJsonDocument<512> jsonSmall;
-static DynamicJsonDocument jsonLarge(4096);
+static DynamicJsonDocument jsonLarge(BUFFER_MQTT_GSM);
 
 typedef struct { int16_t x, y, z; } AmostraAcelerometro;
 
-// ========================================================================================================
-// --- Criptografia ---
-// ========================================================================================================
+// Criptografia embarcada *************************************************************************************************
 #define AES_KEY "6cc18720aed8cb60ceed9fb679495144"
 ESPEncrypt crypto(AES_KEY);
+
+
+
+// Liga o modem **********************************************************************************************************
+bool powerModem()
+{
+    // Estado de repouso (HIGH)
+    digitalWrite(MODEM_PWRKEY, HIGH); 
+    delay(500);
+
+    // Pulso LOW para ligar (Geralmente 1 a 2 segundos)
+    Serial.println("[MODEM] Pulso para LIGAR...");
+    digitalWrite(MODEM_PWRKEY, LOW);
+    delay(1500); 
+    digitalWrite(MODEM_PWRKEY, HIGH); // Volta para repouso
+
+    Serial.println("[MODEM] PULSO NO PWRKEY DADO.");
+    delay(5000);    // Tempo de boot típico
+    return true;
+}
+
+// Desliga o modem **********************************************************************************************************
+bool offModem()
+{
+    modem.gprsDisconnect();
+    modem.sendAT("+CPOF");      // Comando AT para desligar modem
+
+    if (modem.waitResponse(8000L) == 1) {
+        Serial.println("[MODEM] Power OFF via AT");
+        return true;
+    }
+    Serial.println("[OFF MODEM] AT+CPOF falhou");
+    Serial.println("[OFF MODEM] Fallback PWRKEY");
+
+    digitalWrite(MODEM_PWRKEY, HIGH); // Garante que começa em HIGH
+    delay(100);
+    digitalWrite(MODEM_PWRKEY, LOW);  // Puxa para LOW
+    delay(3000);                      // Segura por 3 segundos
+    digitalWrite(MODEM_PWRKEY, HIGH); // Solta para HIGH (repouso)
+    return false;
+}
+
+// adakhsgauisd **********************************************************************************************************
+void waitingTime(const int wait_ms) 
+{
+    esp_task_wdt_reset();
+    unsigned long aux = millis();
+    while(millis() - aux <= (unsigned long) wait_ms) {
+        client.loop();
+        delay(1);
+    }
+}
+
 /*******************************************************************************************************************************/
 // Função que inicializa o modem e faz a ligação com o Broker MQTT.
-bool conectarRedeEbroker() {
-    Serial.println("  -> [REDE] Ligando a interface do chip 4G...");
+bool conectarRedeEbroker() 
+{
     esp_task_wdt_reset(); 
-    
-    
+    Serial.println("  -> [REDE] Ligando a interface do chip 4G...");
+    powerModem();
     SerialAT.println("AT");
     delay(3000);
     
-    
+    // Verifica inicialização correta do GSM
     if (!modem.init()) {
         Serial.println("  -> [REDE] ERRO: O modem nao respondeu. Verifique a alimentacao de energia.");
         return false;
     }
 
+    // Apenas LTE
+    if (!modem.setNetworkMode((NetworkMode)38)) {
+        Serial.println("  -> [REDE] ERRO: Não foi setado Network mode corretamente");
+    }
+
+    // Conexão com operadora
     Serial.println("  -> [REDE] Buscando sinal da antena da operadora (Isso pode levar alguns minutos)...");
     esp_task_wdt_reset();
     if (!modem.waitForNetwork(600000L)) {
         Serial.println("  -> [REDE] ERRO: Antena nao encontrada. Verifique o cartao SIM ou a area de cobertura.");
         return false;
     }
-
+    
+    // Conexão LTE/4G 
     Serial.println("  -> [REDE] Autenticando com a Vivo (GPRS)...");
     esp_task_wdt_reset();
-   
     if (!modem.gprsConnect(apn, gprsUser, gprsPass)) {
         Serial.println("  -> [REDE] ERRO: Falha ao estabelecer dados moveis.");
         return false;
     }
     
+    // Configuração de servidor, porta, keep alive e timeout do socket 
     client.setServer(MQTT_SERVER, MQTT_PORT);
-    client.setBufferSize(4096);
-    client.setKeepAlive(45);
-    client.setSocketTimeout(30);
+    client.setBufferSize(BUFFER_MQTT_GSM);
+    client.setKeepAlive(KEEP_ALIVE_S);
+    client.setSocketTimeout(SOCKET_TIMEOUT_S);
+
+    // Cria Client ID aleatório
     String clientId = "SIFE_PLANTA_" + String(esp_random(), HEX);
 
     Serial.println("  -> [REDE] Conectando ao Servidor MQTT na nuvem...");
     esp_task_wdt_reset();
+
+    // Conexão MQTT com clientId aleatório
     if (client.connect(clientId.c_str())) {
         Serial.println("  -> [REDE] SUCESSO! Link com o servidor estabelecido.");
         return true;
@@ -94,129 +165,71 @@ bool conectarRedeEbroker() {
     }
     return false;
 }
+
 /*******************************************************************************************************************************/
 // Função que desconecta o client MQTT e o modem do GPRS.
-void desconectarRede() {
+void desconectarRede() 
+{
     if (client.connected()) client.disconnect();
-    modem.gprsDisconnect();
+    offModem();
     Serial.println("  -> [REDE] Conexao 4G encerrada em seguranca.");
 }
+
 /*******************************************************************************************************************************/
-// Função que faz o envio dos dados de vibração
-bool enviarVibracaoRealTimeChunked(int sensorID, AmostraAcelerometro* bufferRaw) {
-    const int CHUNK_SIZE = 64;
-    
-    if (modem.isGprsConnected() && client.connected()){
-        for (int parte = 0; parte < NUM_AMOSTRAS / CHUNK_SIZE; parte++) {
-            esp_task_wdt_reset(); 
+// Função que processa Json de vibração (acelerômetro)
+void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJsons[])
+{
+    for (int parte = 0; parte < NUM_AMOSTRAS / CHUNK_SIZE; parte++)
+    {
+        esp_task_wdt_reset(); 
+        jsonLarge.clear();
+        jsonLarge["s"] = sensorID;
+        jsonLarge["p"] = parte + 1;
 
-            jsonLarge.clear();
-            jsonLarge["s"] = sensorID;
-            jsonLarge["p"] = parte + 1;
-            JsonArray dataX = jsonLarge.createNestedArray("x");
-            JsonArray dataY = jsonLarge.createNestedArray("y");
-            JsonArray dataZ = jsonLarge.createNestedArray("z");
-            
-            for (int i = parte * CHUNK_SIZE; i < (parte * CHUNK_SIZE) + CHUNK_SIZE; i++) {
-                dataX.add(bufferRaw[i].x);
-                dataY.add(bufferRaw[i].y);
-                dataZ.add(bufferRaw[i].z);
-            }
-            
-            String jsonString;
-            
-            serializeJson(jsonLarge, jsonString);
-            //String cipher = crypto.encryptString(jsonString);
-
-
-            const char* topic = (sensorID == 1) ? TOPIC_VIBRA_S1_REAL : (sensorID == 2 ? TOPIC_VIBRA_S2_REAL : TOPIC_VIBRA_S3_REAL);
-            
-
-            if (!client.publish(topic, jsonString.c_str())) return false;
-            
-            client.loop();
-            delay(200); 
+        JsonArray dataX = jsonLarge.createNestedArray("x");
+        JsonArray dataY = jsonLarge.createNestedArray("y");
+        JsonArray dataZ = jsonLarge.createNestedArray("z");
+        
+        for (int i = parte * CHUNK_SIZE; i < (parte * CHUNK_SIZE) + CHUNK_SIZE; i++) {
+            dataX.add(bufferRaw[i].x);
+            dataY.add(bufferRaw[i].y);
+            dataZ.add(bufferRaw[i].z);
         }
-        return true;
+        String jsonString;
+        serializeJson(jsonLarge, jsonString);
+        String cipher = crypto.encryptString(jsonString);
+        outJsons[parte] = cipher;
     }
+}
 
-    Serial.println("O Cliente desconectou no envio dos dados do acelerômetro.");
-    return false;
-}
-/*******************************************************************************************************************************/
-// Função que faz o envio dos dados de pressão
-bool enviarPressaoRealTime(float medidaVolts) {
+/********************************************************************************************************/
+// Obtém medida criptografada
+String getMedida(float medida)
+{
     jsonSmall.clear();
-    
-    if (modem.isGprsConnected() && client.connected()){
-        jsonSmall["tipo"] = "REALTIME";
-        jsonSmall["val"] = medidaVolts;
-        
-        
-        String jsonString;
-        serializeJson(jsonSmall, jsonString);
-        
-        
-        String cipher = crypto.encryptString(jsonString);
+    jsonSmall["tipo"] = "REALTIME";
+    jsonSmall["val"] = medida;
+    String jsonString;
+    serializeJson(jsonSmall, jsonString);
+    String cipher = crypto.encryptString(jsonString);
+    return cipher;
+}
 
-        
-        bool sucesso = client.publish(TOPIC_PRESSAO_REAL, cipher.c_str());
-        
-        client.loop();
-        return sucesso;
-    }
-    
-    Serial.println("O Cliente desconectou no envio da pressão.");
-    return false;
-}
-/*******************************************************************************************************************************/
-// Função que faz o envio dos dados de temperatura
-bool enviarTemperaturaRealTime(float temperatura) {
+/************************************************************************************************************************ */
+String getEnergiaSife(float v_f, float v_b, float i_b, float s, int r, bool e1, bool e2)
+{
     jsonSmall.clear();
-    
-    if (modem.isGprsConnected() && client.connected()){
-        jsonSmall["tipo"] = "REALTIME";
-        jsonSmall["val"] = temperatura;
-        String jsonString;
-        serializeJson(jsonSmall, jsonString);   
-        String cipher = crypto.encryptString(jsonString);
-        bool sucesso = client.publish(TOPIC_TEMP_REAL, cipher.c_str());
-        client.loop();
-        return sucesso;
-    }
-    
-    Serial.println("O Cliente desconectou no envio da temperatura.");
-    return false;
-}
-/*******************************************************************************************************************************/
-// Função que faz o envio dos dados do SIFE
-bool enviarEnergiaRealTime(float v_f, float v_b, float i_b, float s, int r, bool e1, bool e2) {
-    jsonSmall.clear();
-    
-    if (modem.isGprsConnected() && client.connected()) { 
-        jsonSmall["tipo"] = "ENERGIA";
-        jsonSmall["V_Fonte"] = v_f;
-        jsonSmall["V_Bat"] = v_b;
-        jsonSmall["I_Bat"] = i_b; 
-        jsonSmall["SoC"] = s;
-        jsonSmall["RedeAC"] = r;
-        jsonSmall["INA1_Err"] = e1; 
-        jsonSmall["INA2_Err"] = e2; 
-        
-        
-        String jsonString;
-        serializeJson(jsonSmall, jsonString);
-        
-        
-        String cipher = crypto.encryptString(jsonString);
-        
-        
-        bool sucesso = client.publish(TOPIC_ENERGIA_REAL, cipher.c_str());
-        client.loop();
-        return sucesso;
-    }
-    
-    Serial.println("O Cliente desconectou no envio da energia.");
-    return false;
+    jsonSmall["tipo"] = "ENERGIA";
+    jsonSmall["V_Fonte"] = v_f;
+    jsonSmall["V_Bat"] = v_b;
+    jsonSmall["I_Bat"] = i_b; 
+    jsonSmall["SoC"] = s;
+    jsonSmall["RedeAC"] = r;
+    jsonSmall["INA1_Err"] = e1; 
+    jsonSmall["INA2_Err"] = e2;
+    String jsonString;
+    serializeJson(jsonSmall, jsonString);
+    String cipher = crypto.encryptString(jsonString);
+    return cipher;
 }
 #endif
