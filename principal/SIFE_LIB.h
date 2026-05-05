@@ -289,6 +289,7 @@ void Monitora()
       fonte = FonteON;
     }
 
+    /*
     Serial.print("Queda no Shunt 2 :");
     Serial.print(shuntvoltage2); // Exibe as perdas(importante para calibração, após calibrar pode comentar)
     Serial.println("mV");
@@ -303,7 +304,8 @@ void Monitora()
     Serial.print("Tensao na BATERIA:  "); Serial.print(loadvoltage1); Serial.println(" V");
     Serial.print("Corrente na BATERIA:       "); Serial.print(realCurrent1); Serial.println(" mA"); 
     Serial.print("Potencia na BATERIA:         "); Serial.print(power_mW1); Serial.println(" mW");
-    Serial.println(""); 
+    Serial.println("");
+    */
     loadvoltage1 = Arredonda(loadvoltage1);  
   }
 }
