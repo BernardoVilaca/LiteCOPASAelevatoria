@@ -15,7 +15,7 @@
 
 
 //#define WDT_TIMEOUT_MS  2 * MINUTES_FACTOR    // Dois minutos
-#define WDT_TIMEOUT_MS  40000 // 40 segundos
+#define WDT_TIMEOUT_MS  60000 // 40 segundos
 
 TwoWire I2C_2 = TwoWire(1);   // Destinado aos sensores
 
@@ -120,16 +120,17 @@ void processarLeituraEnvio()
 
   // Cria variáveis de controle
   String JsonTemperatura, JsonPressao, JsonSife;
+
   String jsonsVibracao[NUM_AMOSTRAS/CHUNK_SIZE];
   
   // inicialização dos sensores
   accel1.begin(0x53);
   accel2.begin(0x1D);
-  selectBus(&I2C_2);
   accel3.begin(0x53);
+  selectBus(&I2C_2);
   selectBus(nullptr);
   ads.begin();
-  
+
   // Obtém dados de pressão
   int16_t adc = ads.readADC_SingleEnded(0);
   medidaPressaoAtual = ads.computeVolts(adc) - 0.0024;
@@ -140,8 +141,8 @@ void processarLeituraEnvio()
   medidaTemperaturaAtual = lerTemperaturaFiltrada();
   if (medidaTemperaturaAtual < 0) medidaTemperaturaAtual = 0.0;
   JsonTemperatura = getMedida(medidaTemperaturaAtual);
-  
-  // Coleta os dados dos sensores
+ 
+  /*// Coleta os dados dos sensores
   collectSensorSamples(accel1, bufferSensor1, nullptr);
   collectSensorSamples(accel2, bufferSensor2, nullptr);
   collectSensorSamples(accel3, bufferSensor3, &I2C_2);
@@ -150,9 +151,13 @@ void processarLeituraEnvio()
   getVibracao(1, bufferSensor1, jsonsVibracao);
   getVibracao(2, bufferSensor2, jsonsVibracao);
   getVibracao(3, bufferSensor3, jsonsVibracao);
-
+  */
   // Obtém medidas do SIFE
   JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2);
+  Serial.println("[DEBUG SIFE] VF = " + String(loadvoltage2));
+  Serial.println("[DEBUG SIFE] VB = " + String(loadvoltage1));
+  Serial.println("[DEBUG SIFE] IB = " + String(realCurrent1));
+  Serial.println("[DEBUG SIFE] SOC = " + String(SoC));
 
   // evitar bugs
   jsonSmall.clear();
@@ -187,8 +192,8 @@ void processarLeituraEnvio()
     Serial.println("[TEMPERATURA] Não foi publicado corretamente.");
   }
   waitingTime(300);
-  // Publicação dos dados dos acelerômetros
-
+  // Publicação dos dados dos acelerômetros 
+  /*
   int sensorId = 1;
   for (int i = 0; i < NUM_AMOSTRAS/CHUNK_SIZE; i++) 
   {
@@ -199,6 +204,7 @@ void processarLeituraEnvio()
     sensorId++;
     waitingTime(500);
   }
+  */
 
   desconectarRede();
   Serial.println("==================================================\n");
