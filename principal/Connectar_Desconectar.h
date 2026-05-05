@@ -6,7 +6,7 @@
 #define TAMANHO_BACKUP          64     // Nº backups
 #define TINY_GSM_MODEM_A7670            // Modelo SIMGSM
 #define BUFFER_MQTT_GSM         4096
-#define KEEP_ALIVE_S            45      // Keep Alive para PINGREQ/PINGRESP
+#define KEEP_ALIVE_S            20      // Keep Alive para PINGREQ/PINGRESP
 #define SOCKET_TIMEOUT_S        30      // Socket Timeout Broker MQTT
 
 // Bibliotecas *************************************************************************************************
@@ -55,6 +55,7 @@ typedef struct { int16_t x, y, z; } AmostraAcelerometro;
 #define AES_KEY "6cc18720aed8cb60ceed9fb679495144"
 ESPEncrypt crypto(AES_KEY);
 
+int counterErrorTcp = 0;
 
 
 // Liga o modem **********************************************************************************************************
@@ -120,6 +121,7 @@ bool conectarRedeEbroker()
     // Verifica inicialização correta do GSM
     if (!modem.init()) {
         Serial.println("  -> [REDE] ERRO: O modem nao respondeu. Verifique a alimentacao de energia.");
+        Serial.println("[MODEM] Restart forçado (init não correspondeu)");
         return false;
     }
 
@@ -162,6 +164,15 @@ bool conectarRedeEbroker()
         return true;
     } else {
         Serial.printf("Erro ao conectar ao servidor MQTT. Código: %i\n", client.state());
+        if(client.state() == -2) {
+            counterErrorTcp++;
+        }
+        if(counterErrorTcp >= 2) {
+            Serial.println("[MODEM] Reiniciando Modem (contador de falhas -2 >= 2)");
+            modem.restart();            // restarta o modem GSM
+            counterErrorTcp = 0;
+            conectarRedeEbroker();
+        }
     }
     return false;
 }
