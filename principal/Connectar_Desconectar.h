@@ -59,20 +59,23 @@ int counterErrorTcp = 0;
 
 
 // Liga o modem **********************************************************************************************************
-bool powerModem()
-{
-    // Estado de repouso (HIGH)
-    digitalWrite(MODEM_PWRKEY, HIGH); 
-    delay(500);
+bool powerModem() {
+    Serial.println("Testing AT... ");
+  if (!modem.testAT()) {
+    Serial.println("Failed to connect to modem");
+  } else {
+    Serial.println("Modem is responding!");
+    return true;
+  }
 
-    // Pulso LOW para ligar (Geralmente 1 a 2 segundos)
-    Serial.println("[MODEM] Pulso para LIGAR...");
+    // Se não respondeu, aí sim damos o pulso
     digitalWrite(MODEM_PWRKEY, LOW);
     delay(1500); 
-    digitalWrite(MODEM_PWRKEY, HIGH); // Volta para repouso
-
-    Serial.println("[MODEM] PULSO NO PWRKEY DADO.");
-    delay(5000);    // Tempo de boot típico
+    digitalWrite(MODEM_PWRKEY, HIGH);
+    
+    // Aguarda o boot e limpa o buffer
+    delay(5000);
+    while(SerialAT.available()) SerialAT.read();
     return true;
 }
 
@@ -211,6 +214,33 @@ void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJ
         String cipher = crypto.encryptString(jsonString);
         outJsons[parte] = cipher;
     }
+}
+
+
+/******************************************************************************************************************/
+// Função dedicada para formatar e enviar os dados de um acelerômetro específico
+bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const char* topic) {
+  // Cria o array de Strings apenas para o tempo de vida desta função
+  String jsonsVibracaoTemp[NUM_AMOSTRAS/CHUNK_SIZE];
+  
+  // Obtém dados estruturados do acelerômetro (criptografado)
+  getVibracao(sensorId, buffer, jsonsVibracaoTemp);
+  
+  bool sucessoTotal = true;
+
+  // Envia todas as partes (chunks) deste sensor para o seu respectivo tópico
+  for (int i = 0; i < NUM_AMOSTRAS/CHUNK_SIZE; i++) {
+    esp_task_wdt_reset(); // Alimenta o watchdog durante o envio
+    
+    // Se a publicação falhar, marcamos o sucessoTotal como false
+    if( !client.publish(topic, jsonsVibracaoTemp[i].c_str()) ) {
+      sucessoTotal = false; 
+    }
+    
+    waitingTime(500); // Aguarda para não afogar o broker MQTT
+  }
+
+  return sucessoTotal;
 }
 
 /********************************************************************************************************/
