@@ -142,7 +142,7 @@ void processarLeituraEnvio()
   if (medidaTemperaturaAtual < 0) medidaTemperaturaAtual = 0.0;
   JsonTemperatura = getMedida(medidaTemperaturaAtual);
  
-  /*// Coleta os dados dos sensores
+  // Coleta os dados dos sensores
   collectSensorSamples(accel1, bufferSensor1, nullptr);
   collectSensorSamples(accel2, bufferSensor2, nullptr);
   collectSensorSamples(accel3, bufferSensor3, &I2C_2);
@@ -151,7 +151,7 @@ void processarLeituraEnvio()
   getVibracao(1, bufferSensor1, jsonsVibracao);
   getVibracao(2, bufferSensor2, jsonsVibracao);
   getVibracao(3, bufferSensor3, jsonsVibracao);
-  */
+
   // Obtém medidas do SIFE
   JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2);
   Serial.println("[DEBUG SIFE] VF = " + String(loadvoltage2));
@@ -193,18 +193,19 @@ void processarLeituraEnvio()
   }
   waitingTime(300);
   // Publicação dos dados dos acelerômetros 
-  /*
-  int sensorId = 1;
-  for (int i = 0; i < NUM_AMOSTRAS/CHUNK_SIZE; i++) 
-  {
-    const char* topic = (sensorId == 1) ? TOPIC_VIBRA_S1_REAL : (sensorId == 2 ? TOPIC_VIBRA_S2_REAL : TOPIC_VIBRA_S3_REAL);
-    if( !client.publish(topic, jsonsVibracao[i].c_str())  ) {
-      Serial.println("[ACCEL] Não foi publicado corretamente: " + String(sensorId));
-    }
-    sensorId++;
-    waitingTime(500);
+  Serial.println("[PASSO 4] Enviando dados dos Acelerômetros...");
+
+  if( !enviarDadosAcelerometro(1, bufferSensor1, TOPIC_VIBRA_S1_REAL) ) {
+    Serial.println("[ACCEL S1] Não foi publicado corretamente.");
   }
-  */
+  
+  if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL) ) {
+    Serial.println("[ACCEL S2] Não foi publicado corretamente.");
+  }
+  
+  if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL) ) {
+    Serial.println("[ACCEL S3] Não foi publicado corretamente.");
+  }
 
   desconectarRede();
   Serial.println("==================================================\n");
