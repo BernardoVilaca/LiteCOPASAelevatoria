@@ -56,7 +56,7 @@ typedef struct { int16_t x, y, z; } AmostraAcelerometro;
 ESPEncrypt crypto(AES_KEY);
 
 int counterErrorTcp = 0;
-
+int counterErrorModemInit = 0;
 
 // Liga o modem **********************************************************************************************************
 bool powerModem() {
@@ -125,8 +125,23 @@ bool conectarRedeEbroker()
     if (!modem.init()) {
         Serial.println("  -> [REDE] ERRO: O modem nao respondeu. Verifique a alimentacao de energia.");
         Serial.println("[MODEM] Restart forçado (init não correspondeu)");
+        
+        
+        counterErrorModemInit++; 
+        Serial.printf("[MODEM] Tentativa de inicializacao %d de 3 falhou.\n", counterErrorModemInit);
+        
+        if (counterErrorModemInit >= 3) {
+            Serial.println("[CRÍTICO] Falha no modem 3 vezes seguidas. Reiniciando o ESP32 em 2 segundos...");
+            delay(2000); 
+            ESP.restart();
+        }
+       
+
         return false;
     }
+
+    // Se o modem iniciou com sucesso, zera o contador para não acumular falsos positivos no futuro
+    counterErrorModemInit = 0;
 
     // Apenas LTE
     if (!modem.setNetworkMode((NetworkMode)38)) {
