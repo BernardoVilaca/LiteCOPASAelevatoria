@@ -57,7 +57,22 @@ ESPEncrypt crypto(AES_KEY);
 
 int counterErrorTcp = 0;
 int counterErrorModemInit = 0;
-
+// Envia Comandos AT *************************************************************************************************
+void sendATCommand(String cmd) {
+  Serial.print("Enviando: ");
+  Serial.println(cmd);
+  
+  modem.sendAT(cmd); // Envia o comando com \r\n automaticamente
+  
+  // Aguarda a resposta por até 2 segundos
+  String response = "";
+  if (modem.waitResponse(2000L, response) == 1) { // 1 = OK
+    Serial.print("Resposta: ");
+    Serial.println(response);
+  } else {
+    Serial.println("Sem resposta ou erro!");
+  }
+}
 // Liga o modem **********************************************************************************************************
 bool powerModem() {
     Serial.println("Testing AT... ");
@@ -123,6 +138,9 @@ bool conectarRedeEbroker()
     
     // Verifica inicialização correta do GSM
     if (!modem.init()) {
+        sendATCommand("+CPMS?");
+        sendATCommand("+CSCLK?");
+        sendATCommand("+CFUN?");
         Serial.println("  -> [REDE] ERRO: O modem nao respondeu. Verifique a alimentacao de energia.");
         Serial.println("[MODEM] Restart forçado (init não correspondeu)");
         
