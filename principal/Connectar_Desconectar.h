@@ -46,6 +46,13 @@ const int CHUNK_SIZE = 64;
 #define TOPIC_TEMP_REAL       "sife_felipe/temperatura/dados"
 #define TOPIC_ENERGIA_REAL    "sife_felipe/energia/dados"
 
+#define TOPIC_VIBRA_S1_BACKUP "sife_felipe/vibracao/sensor1/backup"
+#define TOPIC_VIBRA_S2_BACKUP "sife_felipe/vibracao/sensor2/backup"
+#define TOPIC_VIBRA_S3_BACKUP "sife_felipe/vibracao/sensor3/backup"
+#define TOPIC_PRESSAO_BACKUP  "sife_felipe/pressao/backup"
+#define TOPIC_TEMP_BACKUP     "sife_felipe/temperatura/backup"
+#define TOPIC_ENERGIA_BACKUP  "sife_felipe/energia/backup"
+
 static StaticJsonDocument<512> jsonSmall;
 static DynamicJsonDocument jsonLarge(BUFFER_MQTT_GSM);
 
