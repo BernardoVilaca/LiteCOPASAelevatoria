@@ -12,6 +12,7 @@
 #include "esp_sleep.h"
 #include "Connectar_Desconectar.h"
 #include "SIFE_LIB.h"
+#include "backup.h"
 
 
 //#define WDT_TIMEOUT_MS  2 * MINUTES_FACTOR    // Dois minutos
@@ -113,6 +114,7 @@ void collectSensorSamples(Adafruit_ADXL345_Unified &accel, AmostraAcelerometro *
 /******************************************************************************************************************/
 void processarLeituraEnvio() 
 {
+  Backup_AtualizarCiclo();
   // ----------------------------------
   esp_task_wdt_reset(); 
   Serial.println("\n==================================================");
@@ -169,6 +171,21 @@ void processarLeituraEnvio()
 
   if(!conectarRedeEbroker()) {
     Serial.println("[FALHA] Nao foi possivel transmitir os dados neste ciclo.");
+    Backup_MarcarFalha();
+    Backup_ArmazenarSeNecessario(
+      medidaTemperaturaAtual,
+      medidaPressaoAtual,
+      loadvoltage2,
+      loadvoltage1,
+      realCurrent1,
+      SoC,
+      fonte,
+      erro_ina1,
+      erro_ina2,
+      bufferSensor1,
+      bufferSensor2,
+      bufferSensor3
+    );
     return;
   }
 
@@ -176,6 +193,7 @@ void processarLeituraEnvio()
   esp_task_wdt_reset();
   client.loop();
 
+  Backup_EnviarPendentes();
   Serial.println("[PASSO 3] Enviando pacote de dados via MQTT...");
 
   if( !client.publish(TOPIC_ENERGIA_REAL, JsonSife.c_str()) ) {
@@ -222,6 +240,9 @@ void setup()
 
   // Inicialização da Serial
   Serial.begin(BAUD_RATE);
+
+  // Setup do sistema de backup
+  Backup_Begin();
 
   // Setup Sistema de Fornecimento de Energia (SIFE)
   SIFE_Setup();
