@@ -28,7 +28,7 @@ Adafruit_INA219 ina219_2(0x44);         // INA de entrada/bateria
 #define SEGUNDOS_PARA_MICROSEGUNDOS 1000000ULL  /* Fator de conversão */
 #define TEMPO_DE_SONO_LOADED  180                       /* Tempo que ele vai dormir com a bateria em estado ok(em segundos) */ 
 #define TEMPO_ENVIO_AC 120
-
+const double C = 0.047;                             // Constante de corrente em Deep Sleep (47mA em Amperes)
 //_________________________________________________________________________________________________________
 //--------------------------------------Flags--------------------------------------------------------------
 //_________________________________________________________________________________________________________
@@ -184,15 +184,27 @@ void SIFE_Setup()
   switch(cause) {
   case ESP_SLEEP_WAKEUP_EXT0:
     Serial.println("Acordei pela Rede AC!");
-    caiu = CaiuOFF;                            // A rede está de vola
+    caiu = CaiuOFF;                            // A rede está de volta
     controlador = ModoCarga;                   // Habilita o modo de carga para a máquina de estados
     timer_inicio_carga = millis();
+    break; 
   case ESP_SLEEP_WAKEUP_TIMER:
     Serial.println("Acordei pelo timer");
+    
+    // --- ADIÇÃO DA CONTA DO DEEP SLEEP ---
+    // Q = I * t (Coulombs = Corrente * Segundos)
+    coulombs -= (C * TEMPO_DE_SONO_LOADED);
+    
+    // Proteção para evitar que o contador de carga fique negativo
+    if (coulombs < 0) {
+        coulombs = 0;
+    }
     break;
+    
   default:
     Serial.println("Boot geral");
     break;
+  }
 }
 }
 
@@ -380,11 +392,11 @@ void Pot_dig(){
           checkpoint = CheckpointON; // Finaliza carga
         }
         break;
-    }
+    }/*
     Serial.print("Estado:");
     Serial.print(chargeState);
     Serial.print("  Bit:");
-    Serial.println(Bit_Carga);
+    Serial.println(Bit_Carga);*/
   }
 }  
 
@@ -435,14 +447,14 @@ void ContaCoulomb()
   // Exibe o status do sistema em intervalos definidos por 'Inter_Timer'
   if (millis() - Timer >= Inter_Timer) {
     Timer = millis();
-
+    /*
     Serial.print("Modo: ");
     if (fonte == FonteOFF) {
       Serial.print("DESCARGA");
     } else {
       Serial.print("CARGA");
     }
-
+    
     Serial.print(" | Corrente: "); 
     Serial.print(Corrente_mA); 
     Serial.print("mA");
@@ -453,7 +465,7 @@ void ContaCoulomb()
     
     Serial.print(" | Bateria: ");  
     Serial.print(SoC, 2); 
-    Serial.println("%");
+    Serial.println("%");*/
   }
 }
 
