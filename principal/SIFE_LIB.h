@@ -10,7 +10,7 @@
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include "esp_task_wdt.h"
-
+#include <rom/rtc.h>
 // ========================================================================================================
 // --- Mapeamento de Hardware ---
 // ========================================================================================================
@@ -26,8 +26,8 @@ Adafruit_INA219 ina219_2(0x44);         // INA de entrada/bateria
 // ========================================================================================================
 //____________________________________Configurações Deep sleep_____________________________________________
 #define SEGUNDOS_PARA_MICROSEGUNDOS 1000000ULL  /* Fator de conversão */
-#define TEMPO_DE_SONO_LOADED  180                       /* Tempo que ele vai dormir com a bateria em estado ok(em segundos) */ 
-#define TEMPO_ENVIO_AC 120
+#define TEMPO_DE_SONO_LOADED  900                       /* Tempo que ele vai dormir com a bateria em estado ok(em segundos) */ 
+#define TEMPO_ENVIO_AC 180
 const double C = 0.047;                             // Constante de corrente em Deep Sleep (47mA em Amperes)
 //_________________________________________________________________________________________________________
 //--------------------------------------Flags--------------------------------------------------------------
@@ -79,8 +79,8 @@ int delei = DeleiOFF;                         // Controla o estado de carência/
 int aumenta = 0, diminui = 0;                 // Auxiliares para lógica de incremento/decremento do PWM(ajuste fino)
 int Marker = MarkerOFF;                       // Garante que uma configuração de estado ocorra apenas uma vez
 int checkpoint  = CheckpointOFF;              // Indica se a bateria atingiu os critérios de carga completa
-RTC_DATA_ATTR int controlador = ModoInicial;  // Estado atual do sistema (Salvo durante o sono)
-RTC_DATA_ATTR int fonte = FonteOFF;           // Indica se a fonte AC está presente (Salvo durante o sono)
+RTC_NOINIT_ATTR int controlador;  // Estado atual do sistema (Salvo durante o sono)
+RTC_NOINIT_ATTR int fonte;          // Indica se a fonte AC está presente (Salvo durante o sono)
 RTC_DATA_ATTR int carregou = CarregouOFF;     // Memória se o ciclo de 100% foi concluído (Salvo no sono)
 RTC_DATA_ATTR int caiu = CaiuOFF;             // Flag que registra se houve queda de energia (Salvo no sono)
 RTC_DATA_ATTR bool erro_ina1 = false;         // Indica se houve erro ou não no INA1 para avaliação no Node-red
@@ -107,14 +107,14 @@ float loadvoltage2 = 0;                 // Tensão lida na entrada do conversor 
 float tensaoShutdown = 11.2;            // Tensão mínima de segurança antes de desligar tudo (Deep Sleep até a rede voltar)
 float tensaoReinicioCarga = 13.2;       // Tensão de histerese para disparar nova carga após flutuação
 float safeBatteryV = 14.80;             // Proteção de sobretensão: desliga o MOSFET se atingir este valor
-RTC_DATA_ATTR float SoC = 0;            // Estado de Carga da bateria em % (State of Charge)
+RTC_NOINIT_ATTR float SoC;          // Estado de Carga da bateria em % (State of Charge)
 
 // ========================================================================================================
 // --- Gestão de Energia (Coulomb Counting) ---
 // ======================================================================================================== 
 float capNAmph                = 1500.0;             // Capacidade nominal da bateria em mAh
 float Coulomb_Bat             = capNAmph * 3.6;     // Capacidade total convertida para Coulombs (As)
-RTC_DATA_ATTR double coulombs = 0.0;                // Acumulador de carga atual (Salvo durante o sono)
+RTC_NOINIT_ATTR double coulombs;               // Acumulador de carga atual (Salvo durante o sono)
 
 // ========================================================================================================
 // --- Temporização e Intervalos (unsigned long) ---
@@ -141,7 +141,28 @@ const unsigned long TEMPO_CARENCIA  = 5000;     // Tempo de espera (ms) para est
 // Função que inicializa parâmetros de hardware e firmware do SIFE. Deve ser colocada no Setup()
 void SIFE_Setup()
 { 
-  // Configuração da piangem MOSFET e PWM de controle.
+  // -------------------------------------------------------------------------
+  // 1. CHECAGEM DO MOTIVO DO BOOT (Proteção contra reset de software/watchdog)
+  // -------------------------------------------------------------------------
+  RESET_REASON razao = rtc_get_reset_reason(0); 
+
+  if (razao == POWERON_RESET) {
+      // Se foi ligado na energia física, a memória tem lixo. Precisamos formatar tudo.
+      Serial.println("[BOOT] Sistema ligado na energia. Formatando variáveis da RTC...");
+      coulombs = Coulomb_Bat;     // Assume que ligou com bateria cheia (ou altere para 0 se preferir)
+      SoC = 100.0;
+      controlador = ModoInicial;
+      fonte = FonteON;
+      tentativas_restart_ina = 0; // Zera o contador de tentativas APENAS na primeira vez que liga
+  } else if (razao == RTCWDT_SYS_RESET || razao == TG0WDT_SYS_RESET || razao == SW_CPU_RESET) {
+      // Se for reset de Watchdog ou ESP.restart(), não formata as variáveis!
+      Serial.println("[BOOT] Recuperado de um restart (Software/WDT). Historico de bateria mantido!");
+  }
+
+  // -------------------------------------------------------------------------
+  // 2. CONFIGURAÇÃO DE HARDWARE
+  // -------------------------------------------------------------------------
+  // Configuração da pinagem MOSFET e PWM de controle.
   pinMode(MOS_PIM, OUTPUT);  
   digitalWrite(MOS_PIM, LOW);
   ledcAttachChannel(PWM_PIN, PWM_FREQ, PWM_RESOLUTION, PWM_CHANNEL); 
@@ -149,18 +170,19 @@ void SIFE_Setup()
   delay(3000);    //Delay para estabilização inicial
   Serial.println("INICIALIZANDO O SIFE 2.0"); 
 
-  //Busca pelos sensores INA219 no barramento I2C:
+  // Busca pelos sensores INA219 no barramento I2C:
   bool status_ina1 = ina219_1.begin();
   bool status_ina2 = ina219_2.begin();
 
   if (!status_ina1 || !status_ina2) {
     Serial.println("[SIFE - ERRO] Sensores INA219 de Energia nao detectados.");
+    
     // Tenta novamente buscar os inas 
     if (tentativas_restart_ina < 2) {
       tentativas_restart_ina++;
       Serial.printf("[SIFE] Tentativa automatica de reparo: %d de 2. Reiniciando...\n", tentativas_restart_ina);
       delay(3000);
-      ESP.restart();  
+      ESP.restart();  // Agora a variável não vai zerar após esse restart!
     } else {
       Serial.println("[SIFE - ALERTA] Limite de reinicios atingido. O sistema prosseguira com as marcacoes de erro ativas.");
       erro_ina1 = !status_ina1;
@@ -168,46 +190,49 @@ void SIFE_Setup()
     }
   } else {
     Serial.println("[SIFE - OK] Sensores de Energia INA219 operacionais!");
-    tentativas_restart_ina = 0;
+    tentativas_restart_ina = 0; // Reseta as tentativas caso os sensores voltem a funcionar normalmente
     erro_ina1 = false;
     erro_ina2 = false;
     ina219_1.setCalibration_32V_1A();
     ina219_2.setCalibration_32V_1A();
   }
   
+  // -------------------------------------------------------------------------
+  // 3. INICIALIZAÇÃO DE TEMPOS E ESTADOS
+  // -------------------------------------------------------------------------
   dormir = millis();
   lastMillis = millis();
   delei = DeleiON;        // Ativa a carência inicial
 
   // Configura o sistema após despertar do ESP32 (deepsleep)
   esp_sleep_wakeup_cause_t cause = esp_sleep_get_wakeup_cause();
+  
   switch(cause) {
-  case ESP_SLEEP_WAKEUP_EXT0:
-    Serial.println("Acordei pela Rede AC!");
-    caiu = CaiuOFF;                            // A rede está de volta
-    controlador = ModoCarga;                   // Habilita o modo de carga para a máquina de estados
-    timer_inicio_carga = millis();
-    break; 
-  case ESP_SLEEP_WAKEUP_TIMER:
-    Serial.println("Acordei pelo timer");
-    
-    // --- ADIÇÃO DA CONTA DO DEEP SLEEP ---
-    // Q = I * t (Coulombs = Corrente * Segundos)
-    coulombs -= (C * TEMPO_DE_SONO_LOADED);
-    
-    // Proteção para evitar que o contador de carga fique negativo
-    if (coulombs < 0) {
-        coulombs = 0;
-    }
-    break;
-    
-  default:
-    Serial.println("Boot geral");
-    break;
+    case ESP_SLEEP_WAKEUP_EXT0:
+      Serial.println("Acordei pela Rede AC!");
+      caiu = CaiuOFF;                            // A rede está de volta
+      controlador = ModoCarga;                   // Habilita o modo de carga para a máquina de estados
+      timer_inicio_carga = millis();
+      break; 
+      
+    case ESP_SLEEP_WAKEUP_TIMER:
+      Serial.println("Acordei pelo timer");
+      
+      // --- ADIÇÃO DA CONTA DO DEEP SLEEP ---
+      // Q = I * t (Coulombs = Corrente * Segundos)
+      coulombs -= (C * TEMPO_DE_SONO_LOADED);
+      
+      // Proteção para evitar que o contador de carga fique negativo
+      if (coulombs < 0) {
+          coulombs = 0;
+      }
+      break;
+      
+    default:
+      Serial.println("Boot geral (Primeira ligacao ou Reset)");
+      break;
   }
 }
-}
-
 /*****************************************************************************************************************************/
 //Função que inicia o deep sleep
 void iniciarDeepSleep() 
