@@ -251,6 +251,15 @@ void setup()
   Serial1.begin(BAUD_RATE, SERIAL_8N1, MODEM_RX, MODEM_TX);
   pinMode(MODEM_PWRKEY, OUTPUT);      // Configura Pinagem do modem GSM
   digitalWrite(MODEM_PWRKEY, LOW);    // Garante estado conhecido
+
+  // Configura pino DTR (sleep/wake do modem)
+  // DTR HIGH garante que a UART do modem está ativa antes de qualquer comando AT
+  pinMode(MODEM_SLEEP, OUTPUT);
+  digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
+
+  // Se o modem estava em sleep do ciclo anterior (inclusive antes de um deep sleep do ESP),
+  // wakeModem() o acorda para que offModem() consiga enviar AT+CPOF corretamente.
+  wakeModem();
   offModem();                         // Garante que modem está desconectado
   Serial.println("[SETUP] Modem inicializado em estado off");
   
