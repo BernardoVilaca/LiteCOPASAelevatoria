@@ -30,6 +30,9 @@ static PubSubClient client(gsmClient);
 #define MODEM_RX        16  
 #define MODEM_TX        17  
 #define MODEM_PWRKEY    4
+#define MODEM_SLEEP     14         // Pino Sleep/DTR A7670 (controla UART sleep)
+#define DTR_SET_SLEEP   0           // DTR LOW  -> modem pode dormir (CSCLK ativo)
+#define DTR_SET_WAKE    1           // DTR HIGH -> acorda a UART do modem
 #define MINUTES_FACTOR  6000
 #define BAUD_RATE       115200
 // Broker MQTT *************************************************************************************************
@@ -64,6 +67,58 @@ ESPEncrypt crypto(AES_KEY);
 
 int counterErrorTcp = 0;
 int counterErrorModemInit = 0;
+
+/*******************************************************************************************************************************/
+// Coloca o modem em sleep de baixo consumo via CSCLK + pino DTR.
+// O modem mantém o registro de rede e retoma muito mais rápido do que um boot completo.
+// Chamar sleepModem() é preferível a offModem() quando o ESP32 ficará acordado entre ciclos.
+bool sleepModem()
+{
+    Serial.print("[MODEM] Entrando em sleep (CSCLK + DTR): ");
+
+    // Habilita o modo sleep por software no modem (UART entra em baixo consumo)
+    modem.sendAT("+CSCLK=1");
+    if (modem.waitResponse(2000L) != 1) {
+        Serial.println("CSCLK=1 falhou — modem pode nao suportar sleep agora.");
+        return false;
+    }
+
+    // Puxa DTR para LOW: autoriza o hardware do modem a dormir a UART
+    digitalWrite(MODEM_SLEEP, DTR_SET_SLEEP);
+    delay(100);
+
+    Serial.println("OK");
+    return true;
+}
+
+/*******************************************************************************************************************************/
+// Acorda o modem de um sleep anterior (CSCLK/DTR).
+// Deve ser chamado antes de qualquer comunicação AT após sleepModem().
+bool wakeModem()
+{
+    Serial.print("[MODEM] Acordando (DTR wake): ");
+
+    // Puxa DTR para HIGH para sinalizar ao modem que a UART voltará
+    digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
+    delay(50);
+
+    // Descarta bytes residuais que possam ter chegado durante o sleep
+    while (SerialAT.available()) SerialAT.read();
+
+    // Confirma que a UART responde
+    if (modem.testAT(1500)) {
+        // Desativa o modo sleep por software para liberar a UART completamente
+        modem.sendAT("+CSCLK=0");
+        modem.waitResponse(1000L);
+        Serial.println("OK");
+        return true;
+    }
+
+    // Se não respondeu, o modem pode estar desligado — powerModem() cuidará disso
+    Serial.println("sem resposta (pode estar desligado).");
+    return false;
+}
+
 // Envia Comandos AT *************************************************************************************************
 void sendATCommand(String cmd) {
   Serial.print("Enviando: ");
@@ -139,6 +194,10 @@ bool conectarRedeEbroker()
 {
     esp_task_wdt_reset(); 
     Serial.println("  -> [REDE] Ligando a interface do chip 4G...");
+
+    // Tenta acordar o modem caso esteja em sleep (CSCLK/DTR) do ciclo anterior.
+    // Se o modem estiver desligado, wakeModem() apenas avisa e powerModem() completa o boot.
+    wakeModem();
     powerModem();
     SerialAT.println("AT");
     delay(3000);
@@ -225,8 +284,8 @@ bool conectarRedeEbroker()
 void desconectarRede() 
 {
     if (client.connected()) client.disconnect();
-    offModem();
-    Serial.println("  -> [REDE] Conexao 4G encerrada em seguranca.");
+    sleepModem();   // Mantém contexto de rede; acorda muito mais rápido no próximo ciclo
+    Serial.println("  -> [REDE] Modem em sleep. Conexao 4G suspensa com seguranca.");
 }
 
 /*******************************************************************************************************************************/
