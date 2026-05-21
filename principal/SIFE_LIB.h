@@ -28,7 +28,7 @@ Adafruit_INA219 ina219_2(0x44);         // INA de entrada/bateria
 #define SEGUNDOS_PARA_MICROSEGUNDOS 1000000ULL  /* Fator de conversão */
 #define TEMPO_DE_SONO_LOADED  900                       /* Tempo que ele vai dormir com a bateria em estado ok(em segundos) */ 
 #define TEMPO_ENVIO_AC 180
-const double C = 0.047;                             // Constante de corrente em Deep Sleep (47mA em Amperes)
+const double C = 0.036;                             // Constante de corrente em Deep Sleep (47mA em Amperes)
 //_________________________________________________________________________________________________________
 //--------------------------------------Flags--------------------------------------------------------------
 //_________________________________________________________________________________________________________
