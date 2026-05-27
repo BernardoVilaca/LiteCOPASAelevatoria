@@ -16,7 +16,7 @@
 
 
 //#define WDT_TIMEOUT_MS  2 * MINUTES_FACTOR    // Dois minutos
-#define WDT_TIMEOUT_MS  60000 // 40 segundos
+#define WDT_TIMEOUT_MS  120000 // 2 minutos
 
 TwoWire I2C_2 = TwoWire(1);   // Destinado aos sensores
 
@@ -186,7 +186,8 @@ void processarLeituraEnvio()
       bufferSensor2,
       bufferSensor3
     );
-    return;
+    desconectarRede();
+        return;
   }
 
   // ----------------------------------
@@ -217,13 +218,11 @@ void processarLeituraEnvio()
     Serial.println("[ACCEL S1] Não foi publicado corretamente.");
   }
   
-  if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL) ) {
-    Serial.println("[ACCEL S2] Não foi publicado corretamente.");
-  }
-  
-  if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL) ) {
-    Serial.println("[ACCEL S3] Não foi publicado corretamente.");
-  }
+
+if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL) ) {     Serial.println("[ACCEL S2] Não foi publicado corretamente."); }
+
+
+if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL) ) { Serial.println("[ACCEL S3] Não foi publicado corretamente."); }
 
   desconectarRede();
   Serial.println("==================================================\n");
@@ -257,11 +256,6 @@ void setup()
   pinMode(MODEM_SLEEP, OUTPUT);
   digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
 
-  // Se o modem estava em sleep do ciclo anterior (inclusive antes de um deep sleep do ESP),
-  // wakeModem() o acorda para que offModem() consiga enviar AT+CPOF corretamente.
-  wakeModem();
-  offModem();                         // Garante que modem está desconectado
-  Serial.println("[SETUP] Modem inicializado em estado off");
   
   // Inicialização barramento I2C
   Wire.begin(21, 22); 
