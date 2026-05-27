@@ -16,6 +16,7 @@
 #include <ArduinoJson.h>
 #include <esp_task_wdt.h> 
 #include "ESPEncrypt.h"
+#include <driver/rtc_io.h>
 
 // GSM - GPRS LTE *********************************************************************************************
 const char apn[]      = "zap.vivo.com.br"; 
@@ -76,16 +77,19 @@ bool sleepModem()
 {
     Serial.print("[MODEM] Entrando em sleep (CSCLK + DTR): ");
 
-    // Habilita o modo sleep por software no modem (UART entra em baixo consumo)
+    // Habilita o modo sleep por software no modem
     modem.sendAT("+CSCLK=1");
     if (modem.waitResponse(2000L) != 1) {
         Serial.println("CSCLK=1 falhou — modem pode nao suportar sleep agora.");
         return false;
     }
 
-    // Puxa DTR para LOW: autoriza o hardware do modem a dormir a UART
+    // Puxa DTR para LOW
     digitalWrite(MODEM_SLEEP, DTR_SET_SLEEP);
     delay(100);
+
+    // Trava o estado lógico do pino DTR no domínio RTC
+    rtc_gpio_hold_en(GPIO_NUM_14);
 
     Serial.println("OK");
     return true;
@@ -98,23 +102,30 @@ bool wakeModem()
 {
     Serial.print("[MODEM] Acordando (DTR wake): ");
 
-    // Puxa DTR para HIGH para sinalizar ao modem que a UART voltará
+    // Libera o pino DTR do domínio RTC
+    rtc_gpio_hold_dis(GPIO_NUM_14);
+
+    // Puxa DTR para HIGH
     digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
     delay(50);
 
-    // Descarta bytes residuais que possam ter chegado durante o sleep
+    // Descarta bytes residuais
     while (SerialAT.available()) SerialAT.read();
 
     // Confirma que a UART responde
     if (modem.testAT(1500)) {
-        // Desativa o modo sleep por software para liberar a UART completamente
+        // Desativa o modo sleep por software
         modem.sendAT("+CSCLK=0");
         modem.waitResponse(1000L);
+        
+        // Religa o rádio
+        modem.sendAT("+CFUN=1");
+        modem.waitResponse(5000L);
+        
         Serial.println("OK");
         return true;
     }
 
-    // Se não respondeu, o modem pode estar desligado — powerModem() cuidará disso
     Serial.println("sem resposta (pode estar desligado).");
     return false;
 }
@@ -166,14 +177,7 @@ bool offModem()
         Serial.println("[MODEM] Power OFF via AT");
         return true;
     }
-    Serial.println("[OFF MODEM] AT+CPOF falhou");
-    Serial.println("[OFF MODEM] Fallback PWRKEY");
-
-    digitalWrite(MODEM_PWRKEY, HIGH); // Garante que começa em HIGH
-    delay(100);
-    digitalWrite(MODEM_PWRKEY, LOW);  // Puxa para LOW
-    delay(3000);                      // Segura por 3 segundos
-    digitalWrite(MODEM_PWRKEY, HIGH); // Solta para HIGH (repouso)
+    Serial.println("[OFF MODEM] AT+CPOF falhou. Pulso fisico abortado para evitar dessincronizacao.");
     return false;
 }
 
@@ -195,8 +199,7 @@ bool conectarRedeEbroker()
     esp_task_wdt_reset(); 
     Serial.println("  -> [REDE] Ligando a interface do chip 4G...");
 
-    // Tenta acordar o modem caso esteja em sleep (CSCLK/DTR) do ciclo anterior.
-    // Se o modem estiver desligado, wakeModem() apenas avisa e powerModem() completa o boot.
+    // Tenta acordar o modem caso esteja em sleep do ciclo anterior.
     wakeModem();
     powerModem();
     SerialAT.println("AT");
@@ -207,24 +210,20 @@ bool conectarRedeEbroker()
         sendATCommand("+CPMS?");
         sendATCommand("+CSCLK?");
         sendATCommand("+CFUN?");
-        Serial.println("  -> [REDE] ERRO: O modem nao respondeu. Verifique a alimentacao de energia.");
-        Serial.println("[MODEM] Restart forçado (init não correspondeu)");
-        
+        Serial.println("  -> [REDE] ERRO: O modem nao respondeu.");
         
         counterErrorModemInit++; 
         Serial.printf("[MODEM] Tentativa de inicializacao %d de 3 falhou.\n", counterErrorModemInit);
         
         if (counterErrorModemInit >= 3) {
-            Serial.println("[CRÍTICO] Falha no modem 3 vezes seguidas. Reiniciando o ESP32 em 2 segundos...");
+            Serial.println("[CRÍTICO] Falha no modem 3 vezes seguidas. Reiniciando o ESP32...");
             delay(2000); 
             ESP.restart();
         }
-       
-
         return false;
     }
 
-    // Se o modem iniciou com sucesso, zera o contador para não acumular falsos positivos no futuro
+    // Zera o contador se iniciou com sucesso
     counterErrorModemInit = 0;
 
     // Apenas LTE
@@ -232,60 +231,66 @@ bool conectarRedeEbroker()
         Serial.println("  -> [REDE] ERRO: Não foi setado Network mode corretamente");
     }
 
-    // Conexão com operadora
-    Serial.println("  -> [REDE] Buscando sinal da antena da operadora (Isso pode levar alguns minutos)...");
+    Serial.println("  -> [REDE] Buscando sinal da operadora...");
     esp_task_wdt_reset();
     if (!modem.waitForNetwork(600000L)) {
-        Serial.println("  -> [REDE] ERRO: Antena nao encontrada. Verifique o cartao SIM ou a area de cobertura.");
+        Serial.println("  -> [REDE] ERRO: Antena nao encontrada.");
         return false;
     }
     
-    // Conexão LTE/4G 
-    Serial.println("  -> [REDE] Autenticando com a Vivo (GPRS)...");
+    Serial.println("  -> [REDE] Autenticando (GPRS)...");
     esp_task_wdt_reset();
     if (!modem.gprsConnect(apn, gprsUser, gprsPass)) {
         Serial.println("  -> [REDE] ERRO: Falha ao estabelecer dados moveis.");
         return false;
     }
     
-    // Configuração de servidor, porta, keep alive e timeout do socket 
     client.setServer(MQTT_SERVER, MQTT_PORT);
     client.setBufferSize(BUFFER_MQTT_GSM);
     client.setKeepAlive(KEEP_ALIVE_S);
     client.setSocketTimeout(SOCKET_TIMEOUT_S);
 
-    // Cria Client ID aleatório
     String clientId = "SIFE_PLANTA_" + String(esp_random(), HEX);
 
     Serial.println("  -> [REDE] Conectando ao Servidor MQTT na nuvem...");
-    esp_task_wdt_reset();
-
-    // Conexão MQTT com clientId aleatório
-    if (client.connect(clientId.c_str())) {
-        Serial.println("  -> [REDE] SUCESSO! Link com o servidor estabelecido.");
-        return true;
-    } else {
-        Serial.printf("Erro ao conectar ao servidor MQTT. Código: %i\n", client.state());
-        if(client.state() == -2) {
-            counterErrorTcp++;
-        }
-        if(counterErrorTcp >= 2) {
-            Serial.println("[MODEM] Reiniciando Modem (contador de falhas -2 >= 2)");
-            modem.restart();            // restarta o modem GSM
-            counterErrorTcp = 0;
-            conectarRedeEbroker();
+    
+    // LAÇO DE RECONEXÃO MQTT (Até 3 tentativas antes de falhar o ciclo)
+    int mqttRetries = 0;
+    while (mqttRetries < 3) {
+        esp_task_wdt_reset();
+        if (client.connect(clientId.c_str())) {
+            Serial.println("  -> [REDE] SUCESSO! Link com o servidor estabelecido.");
+            return true;
+        } else {
+            Serial.printf("  -> [REDE] Erro MQTT (Tentativa %d de 3). Codigo: %i\n", mqttRetries + 1, client.state());
+            mqttRetries++;
+            
+            // Aguarda 2 segundos antes de tentar de novo alimentando o watchdog
+            unsigned long waitTime = millis();
+            while(millis() - waitTime < 2000) { esp_task_wdt_reset(); delay(10); }
         }
     }
+
+    // Tratamento de falhas TCP contínuas (State -2)
+    if(client.state() == -2) {
+        counterErrorTcp++;
+    }
+    if(counterErrorTcp >= 2) {
+        Serial.println("[MODEM] Reiniciando Modem (contador de falhas -2 >= 2)");
+        modem.restart();            
+        counterErrorTcp = 0;
+        return false;
+    }
+    
     return false;
 }
-
 /*******************************************************************************************************************************/
 // Função que desconecta o client MQTT e o modem do GPRS.
 void desconectarRede() 
 {
     if (client.connected()) client.disconnect();
     sleepModem();   // Mantém contexto de rede; acorda muito mais rápido no próximo ciclo
-    Serial.println("  -> [REDE] Modem em sleep. Conexao 4G suspensa com seguranca.");
+    Serial.println("  -> [REDE] Modem em sleep.");
 }
 
 /*******************************************************************************************************************************/
