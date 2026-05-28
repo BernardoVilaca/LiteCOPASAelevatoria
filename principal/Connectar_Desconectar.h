@@ -233,7 +233,7 @@ bool conectarRedeEbroker()
 
     Serial.println("  -> [REDE] Buscando sinal da operadora...");
     esp_task_wdt_reset();
-    if (!modem.waitForNetwork(600000L)) {
+    if (!modem.waitForNetwork(60000L)) {
         Serial.println("  -> [REDE] ERRO: Antena nao encontrada.");
         return false;
     }
@@ -323,25 +323,25 @@ void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJ
 
 /******************************************************************************************************************/
 // Função dedicada para formatar e enviar os dados de um acelerômetro específico
+/******************************************************************************************************************/
+// Função dedicada para formatar e enviar os dados de um acelerômetro específico
 bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const char* topic) {
-  // Cria o array de Strings apenas para o tempo de vida desta função
   String jsonsVibracaoTemp[NUM_AMOSTRAS/CHUNK_SIZE];
   
-  // Obtém dados estruturados do acelerômetro (criptografado)
   getVibracao(sensorId, buffer, jsonsVibracaoTemp);
   
   bool sucessoTotal = true;
 
-  // Envia todas as partes (chunks) deste sensor para o seu respectivo tópico
   for (int i = 0; i < NUM_AMOSTRAS/CHUNK_SIZE; i++) {
-    esp_task_wdt_reset(); // Alimenta o watchdog durante o envio
+    esp_task_wdt_reset(); 
     
-    // Se a publicação falhar, marcamos o sucessoTotal como false
+    
     if( !client.publish(topic, jsonsVibracaoTemp[i].c_str()) ) {
       sucessoTotal = false; 
+      Serial.println("-> Erro TCP/MQTT detectado no chunk. Abortando sensor.");
     }
     
-    waitingTime(500); // Aguarda para não afogar o broker MQTT
+    waitingTime(500); 
   }
 
   return sucessoTotal;
