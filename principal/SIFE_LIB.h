@@ -135,164 +135,101 @@ unsigned long intervalo2            = 500;      // Frequência de leitura dos se
 unsigned long Inter_Timer           = 5000;     // Intervalo de print do log de bateria no Serial (ms)
 unsigned long Sleep_Timer           = 70000;    // Tempo de espera (ms) antes de entrar em economia de energia
 const unsigned long TEMPO_CARENCIA  = 5000;     // Tempo de espera (ms) para estabilizar a fonte antes de medir
-/*****************************************************************************************************************************/
-//Função de arredontamento de float
-float Arredonda(float v) {
-  // Inteiro de déciMOS (ex.: 13.66 → 136)
-  int dezena = int(v * 10.0f);
-  // Dígito das centésimas (ex.: 13.66 → 1366 % 10 → 6)
-  int centesima = (int)(v * 100.0f) % 10;
-  
-  if (centesima == 9) {
-    // 13.9 → 139 → +1 → 140 → 14.0
-    dezena += 1;
-  }
-  else if (centesima == 1) {
-    // 13.1 → 131 → −1 → 130 → 13.0
-    dezena -= 1;
-  }
-// Retorna v truncado para uma casa decimal,
-// mas arredonda para cima se o centésimo for 9,
-// e arredonda para baixo se o centésimo for 1. 
-  return dezena / 10.0f;
-}
 
-/*******************************************************************************************************************************/
-// Estima o SoC inicial com base na curva de tensão de circuito aberto (OCV) via interpolação linear por partes
-float calcularSoCInicial(float v) 
-{
-  // Limites superiores e inferiores absolutos do sistema
-  if (v >= 14.0f) return 100.0f;
-  if (v <= 11.2f) return 0.0f;
 
-  // Interpolação entre 13.5V e 14.0V -> Mapeia para 90% a 100%
-  if (v >= 13.5f) {
-    return 90.0f + ((v - 13.5f) * (10.0f / (14.0f - 13.5f)));
-  }
-  // Interpolação entre 12.8V e 13.5V -> Mapeia para 70% a 90%
-  if (v >= 12.8f) {
-    return 70.0f + ((v - 12.8f) * (20.0f / (13.5f - 12.8f)));
-  }
-  // Interpolação entre 11.5V e 12.8V -> Mapeia para 10% a 70%
-  if (v >= 11.5f) {
-    return 10.0f + ((v - 11.5f) * (60.0f / (12.8f - 11.5f)));
-  }
-  // Interpolação entre 11.2V e 11.5V -> Mapeia para 0% a 10%
-  if (v >= 11.2f) {
-    return 0.0f + ((v - 11.2f) * (10.0f / (11.5f - 11.2f)));
-  }
-
-  return 0.0f;
-}
 /*******************************************************************************************************************************/
 // Função que inicializa parâmetros de hardware e firmware do SIFE. Deve ser colocada no Setup()
 void SIFE_Setup()
 { 
-
-  // 1. Captura o motivo do reset logo no boot
+  // -------------------------------------------------------------------------
+  // 1. CHECAGEM DO MOTIVO DO BOOT (Proteção contra reset de software/watchdog)
+  // -------------------------------------------------------------------------
   RESET_REASON razao = rtc_get_reset_reason(0); 
 
-  // 2. Configuração inicial de pinagem e periféricos
+  if (razao == POWERON_RESET) {
+      // Se foi ligado na energia física, a memória tem lixo. Precisamos formatar tudo.
+      Serial.println("[BOOT] Sistema ligado na energia. Formatando variáveis da RTC...");
+      coulombs = Coulomb_Bat;     // Assume que ligou com bateria cheia (ou altere para 0 se preferir)
+      SoC = 100.0;
+      controlador = ModoInicial;
+      fonte = FonteON;
+      tentativas_restart_ina = 0; // Zera o contador de tentativas APENAS na primeira vez que liga
+  } else if (razao == RTCWDT_SYS_RESET || razao == TG0WDT_SYS_RESET || razao == SW_CPU_RESET) {
+      // Se for reset de Watchdog ou ESP.restart(), não formata as variáveis!
+      Serial.println("[BOOT] Recuperado de um restart (Software/WDT). Historico de bateria mantido!");
+  }
+
+  // -------------------------------------------------------------------------
+  // 2. CONFIGURAÇÃO DE HARDWARE
+  // -------------------------------------------------------------------------
+  // Configuração da pinagem MOSFET e PWM de controle.
   pinMode(MOS_PIM, OUTPUT);  
   digitalWrite(MOS_PIM, LOW);
   ledcAttachChannel(PWM_PIN, PWM_FREQ, PWM_RESOLUTION, PWM_CHANNEL); 
 
-  delay(3000); // Aguarda estabilização das fontes secundárias
+  delay(3000);    //Delay para estabilização inicial
   Serial.println("INICIALIZANDO O SIFE 2.0"); 
 
-  // Inicializa barramento e sensores INA219
+  // Busca pelos sensores INA219 no barramento I2C:
   bool status_ina1 = ina219_1.begin();
   bool status_ina2 = ina219_2.begin();
 
   if (!status_ina1 || !status_ina2) {
     Serial.println("[SIFE - ERRO] Sensores INA219 de Energia nao detectados.");
+    
+    // Tenta novamente buscar os inas 
     if (tentativas_restart_ina < 2) {
       tentativas_restart_ina++;
       Serial.printf("[SIFE] Tentativa automatica de reparo: %d de 2. Reiniciando...\n", tentativas_restart_ina);
       delay(3000);
-      ESP.restart();  
+      ESP.restart();  // Agora a variável não vai zerar após esse restart!
     } else {
-      Serial.println("[SIFE - ALERTA] Limite de reinicios atingido. Prosseguindo com erros ativos.");
+      Serial.println("[SIFE - ALERTA] Limite de reinicios atingido. O sistema prosseguira com as marcacoes de erro ativas.");
       erro_ina1 = !status_ina1;
       erro_ina2 = !status_ina2;
     }
   } else {
     Serial.println("[SIFE - OK] Sensores de Energia INA219 operacionais!");
+    tentativas_restart_ina = 0; // Reseta as tentativas caso os sensores voltem a funcionar normalmente
     erro_ina1 = false;
     erro_ina2 = false;
     ina219_1.setCalibration_32V_1A();
     ina219_2.setCalibration_32V_1A();
   }
-
-  // 3. Força uma leitura imediata dos INAs para alimentar as variáveis de tensão
-  if (!erro_ina1 && !erro_ina2) {
-    float shuntvoltage1 = ina219_1.getShuntVoltage_mV();
-    float busvoltage1 = ina219_1.getBusVoltage_V();
-    realCurrent1 = shuntvoltage1 / R_Shunt1;
-    float perdas = ((realCurrent1 / 1000.0f) * 0.1f); // Rshunt = 0.1
-    loadvoltage1 = Arredonda(busvoltage1 + (shuntvoltage1 / 1000.0f) - perdas);
-
-    float shuntvoltage2 = ina219_2.getShuntVoltage_mV();
-    float busvoltage2 = ina219_2.getBusVoltage_V(); 
-    realCurrent2 = shuntvoltage2 / R_Shunt2;
-    loadvoltage2 = busvoltage2 + (shuntvoltage2 / 1000.0f);
-
-    if (realCurrent2 < CorrenteFonteOFF && loadvoltage2 < TensaoFonteOFF) { 
-      fonte = FonteOFF;
-    } else {
-      fonte = FonteON;
-    }
-  }
-
- // 4. Aplicação do SoC Dinâmico baseado no motivo do Reset
-  if (razao == POWERON_RESET || razao == EXT_CPU_RESET) {
-      Serial.println("[BOOT] Reset por Hardware/Power-On. Calculando SoC dinamico por OCV...");
-      
-      // Se os INAs falharem, assume 0V e consequentemente 0% por segurança
-      SoC = calcularSoCInicial(loadvoltage1);
-      coulombs = (SoC / 100.0) * Coulomb_Bat; // Sincroniza o contador de Coulombs com o SoC estimado
-      
-      controlador = ModoInicial;
-      tentativas_restart_ina = 0; 
-      Serial.printf("[BOOT] Tensao OCV lida: %.2fV -> SoC Inicial Ajustado: %.2f%%\n", loadvoltage1, SoC);
-
-  } else if (razao == DEEPSLEEP_RESET) {
-      // O ESP32 acordou do Deep Sleep. Ignoramos a interpolação pois o SoC e os 
-      // Coulombs já estão retidos com segurança nas variáveis RTC_NOINIT_ATTR.
-      Serial.println("[BOOT] Retorno de Deep Sleep. Mantendo dados do RTC (SoC e Coulombs).");
-      
-  } else if (razao == RTCWDT_SYS_RESET || razao == TG0WDT_SYS_RESET || razao == SW_CPU_RESET) {
-      // Resets de software ou Watchdog mantêm os registradores RTC intactos
-      Serial.println("[BOOT] Recuperado de interrupcao (Software/WDT). Retendo dados anteriores de SoC.");
-  } else {
-      // Casos de erro não mapeados limpam a estrutura por segurança
-      Serial.println("[BOOT] Condicao atipica detectada. Reconfigurando SoC Dinamico...");
-      SoC = calcularSoCInicial(loadvoltage1);
-      coulombs = (SoC / 100.0) * Coulomb_Bat;
-      controlador = ModoInicial;
-      tentativas_restart_ina = 0;
-  }
   
-  // 5. Configuração de temporizadores e buffers restantes
+  // -------------------------------------------------------------------------
+  // 3. INICIALIZAÇÃO DE TEMPOS E ESTADOS
+  // -------------------------------------------------------------------------
   dormir = millis();
   lastMillis = millis();
-  delei = DeleiON; 
+  delei = DeleiON;        // Ativa a carência inicial
 
+  // Configura o sistema após despertar do ESP32 (deepsleep)
   esp_sleep_wakeup_cause_t cause = esp_sleep_get_wakeup_cause();
+  
   switch(cause) {
     case ESP_SLEEP_WAKEUP_EXT0:
       Serial.println("Acordei pela Rede AC!");
-      caiu = CaiuOFF;                            
-      controlador = ModoCarga;                   
+      caiu = CaiuOFF;                            // A rede está de volta
+      controlador = ModoCarga;                   // Habilita o modo de carga para a máquina de estados
       timer_inicio_carga = millis();
       break; 
+      
     case ESP_SLEEP_WAKEUP_TIMER:
       Serial.println("Acordei pelo timer");
+      
+      // --- ADIÇÃO DA CONTA DO DEEP SLEEP ---
+      // Q = I * t (Coulombs = Corrente * Segundos)
       coulombs -= (C * TEMPO_DE_SONO_LOADED);
-      if (coulombs < 0) coulombs = 0;
-      SoC = (coulombs / Coulomb_Bat) * 100.0; // Atualiza SoC após decréscimo do sleep
+      
+      // Proteção para evitar que o contador de carga fique negativo
+      if (coulombs < 0) {
+          coulombs = 0;
+      }
       break;
+      
     default:
+      Serial.println("Boot geral (Primeira ligacao ou Reset)");
       break;
   }
 }
@@ -317,11 +254,31 @@ void iniciarDeepSleep()
   Serial.println("Indo dormir agora...");
   Serial.flush();
 
-
   // 2. Entra no modo Deep Sleep
   esp_deep_sleep_start();
 }
 
+/*****************************************************************************************************************************/
+//Função de arredontamento de float
+float Arredonda(float v) {
+  // Inteiro de déciMOS (ex.: 13.66 → 136)
+  int dezena = int(v * 10.0f);
+  // Dígito das centésimas (ex.: 13.66 → 1366 % 10 → 6)
+  int centesima = (int)(v * 100.0f) % 10;
+  
+  if (centesima == 9) {
+    // 13.9 → 139 → +1 → 140 → 14.0
+    dezena += 1;
+  }
+  else if (centesima == 1) {
+    // 13.1 → 131 → −1 → 130 → 13.0
+    dezena -= 1;
+  }
+// Retorna v truncado para uma casa decimal,
+// mas arredonda para cima se o centésimo for 9,
+// e arredonda para baixo se o centésimo for 1. 
+  return dezena / 10.0f;
+}
 
 //Função para controle do MOSFET na placa do SIFE e para controle do distribuidor de energia
 void ControleMosfet(int comandoMosfet){
