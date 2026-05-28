@@ -249,7 +249,7 @@ void setup()
   // Setup Modem GSM
   Serial1.begin(BAUD_RATE, SERIAL_8N1, MODEM_RX, MODEM_TX);
   pinMode(MODEM_PWRKEY, OUTPUT);      // Configura Pinagem do modem GSM
-  digitalWrite(MODEM_PWRKEY, LOW);    // Garante estado conhecido
+  digitalWrite(MODEM_PWRKEY, HIGH);    // Garante estado conhecido
 
   // Configura pino DTR (sleep/wake do modem)
   // DTR HIGH garante que a UART do modem está ativa antes de qualquer comando AT
