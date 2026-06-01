@@ -149,10 +149,6 @@ void processarLeituraEnvio()
   collectSensorSamples(accel2, bufferSensor2, nullptr);
   collectSensorSamples(accel3, bufferSensor3, &I2C_2);
 
-  // Obtém dados estruturados dos acelerômetros (criptografado):
-  getVibracao(1, bufferSensor1, jsonsVibracao);
-  getVibracao(2, bufferSensor2, jsonsVibracao);
-  getVibracao(3, bufferSensor3, jsonsVibracao);
 
   // Obtém medidas do SIFE
   JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2);
@@ -287,10 +283,20 @@ void loop()
 
     processarLeituraEnvio();
     timer_ciclo = millis();
+
+    if (fonte == FonteOFF) {
+        Serial.println("[ENERGIA] Tarefa concluida na bateria. A entrar em Deep Sleep imediato!");
+        iniciarDeepSleep();
+    }
   }
 
   else if (!primeiro_ciclo && (millis() - timer_ciclo >= (TEMPO_ENVIO_AC * 1000UL))) {
     processarLeituraEnvio();
     timer_ciclo = millis(); 
+
+    if (fonte == FonteOFF) {
+        Serial.println("[ENERGIA] Tarefa concluida na bateria. A entrar em Deep Sleep imediato!");
+        iniciarDeepSleep();
+    }
   } 
 }
