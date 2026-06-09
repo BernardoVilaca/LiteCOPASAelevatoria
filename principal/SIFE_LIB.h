@@ -237,8 +237,8 @@ void SIFE_Setup() {
     controlador = ModoInicial;
     tentativas_restart_ina = 0;
     Serial.printf("[BOOT] Tensao OCV lida: %.2fV -> SoC Inicial Ajustado: %.2f%%\n", loadvoltage1, SoC);
-  } else if (razao == RTCWDT_SYS_RESET || razao == TG0WDT_SYS_RESET || razao == SW_CPU_RESET) {
-    Serial.println("[BOOT] Recuperado de interrupcao (Software/WDT). Retendo dados anteriores de SoC.");
+  } else if (razao == RTCWDT_SYS_RESET || razao == TG0WDT_SYS_RESET || razao == SW_CPU_RESET || razao == DEEPSLEEP_RESET) {
+    Serial.println("[BOOT] Recuperado de interrupcao ou Deep Sleep. Retendo dados anteriores de SoC.");
   } else {
     Serial.println("[BOOT] Condicao atipica detectada. Reconfigurando SoC Dinamico...");
     SoC = calcularSoCInicial(loadvoltage1);
