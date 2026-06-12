@@ -212,7 +212,7 @@ void processarLeituraEnvio()
 
   if( !enviarDadosAcelerometro(1, bufferSensor1, TOPIC_VIBRA_S1_REAL) ) {
     Serial.println("[ACCEL S1] Não foi publicado corretamente.");
-  }
+  } 
   
 
 if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL) ) {     Serial.println("[ACCEL S2] Não foi publicado corretamente."); }
