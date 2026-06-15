@@ -1,7 +1,7 @@
 /******************************************************************
- *  @brief
- *  @authors
- *  @warning
+ * @brief
+ * @authors
+ * @warning
  *****************************************************************/
 
 // Inclusão de bibliotecas ******************************************
@@ -16,7 +16,7 @@
 
 
 //#define WDT_TIMEOUT_MS  2 * MINUTES_FACTOR    // Dois minutos
-#define WDT_TIMEOUT_MS  60000 // 40 segundos
+#define WDT_TIMEOUT_MS  120000 // 2 minutos
 
 TwoWire I2C_2 = TwoWire(1);   // Destinado aos sensores
 
@@ -149,10 +149,6 @@ void processarLeituraEnvio()
   collectSensorSamples(accel2, bufferSensor2, nullptr);
   collectSensorSamples(accel3, bufferSensor3, &I2C_2);
 
-  // Obtém dados estruturados dos acelerômetros (criptografado):
-  getVibracao(1, bufferSensor1, jsonsVibracao);
-  getVibracao(2, bufferSensor2, jsonsVibracao);
-  getVibracao(3, bufferSensor3, jsonsVibracao);
 
   // Obtém medidas do SIFE
   JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2);
@@ -169,7 +165,30 @@ void processarLeituraEnvio()
   esp_task_wdt_reset();
   Serial.println("[PASSO 2] Leitura concluida. Iniciando comunicacao com a Nuvem...");
 
-  if(!conectarRedeEbroker()) {
+  bool conexaoEstabelecida = conectarRedeEbroker();
+
+  // VALIDAÇÃO DE IP E DEAD SOCKET (1 Tentativa de Reconexão Forçada)
+  if (conexaoEstabelecida) {
+      if (!checkIP() || !client.loop()) {
+          Serial.println("  -> [REDE] IP Invalido ou Dead Socket (MQTT) detectado.");
+          Serial.println("  -> [REDE] Tentando reconexao forcada (1x)...");
+          
+          desconectarRede();
+          modem.gprsDisconnect(); // Força a queda do PDP Context
+          waitingTime(2000);
+          
+          conexaoEstabelecida = conectarRedeEbroker();
+          
+          if (conexaoEstabelecida) {
+              if (!checkIP() || !client.loop()) {
+                  Serial.println("  -> [REDE] Falha persistente de IP/Socket apos reconexao. Abortando.");
+                  conexaoEstabelecida = false;
+              }
+          }
+      }
+  }
+
+  if(!conexaoEstabelecida) {
     Serial.println("[FALHA] Nao foi possivel transmitir os dados neste ciclo.");
     Backup_MarcarFalha();
     Backup_ArmazenarSeNecessario(
@@ -186,12 +205,12 @@ void processarLeituraEnvio()
       bufferSensor2,
       bufferSensor3
     );
-    return;
+    desconectarRede();
+        return;
   }
 
   // ----------------------------------
   esp_task_wdt_reset();
-  client.loop();
 
   Backup_EnviarPendentes();
   Serial.println("[PASSO 3] Enviando pacote de dados via MQTT...");
@@ -215,15 +234,13 @@ void processarLeituraEnvio()
 
   if( !enviarDadosAcelerometro(1, bufferSensor1, TOPIC_VIBRA_S1_REAL) ) {
     Serial.println("[ACCEL S1] Não foi publicado corretamente.");
-  }
+  } 
   
-  if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL) ) {
-    Serial.println("[ACCEL S2] Não foi publicado corretamente.");
-  }
-  
-  if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL) ) {
-    Serial.println("[ACCEL S3] Não foi publicado corretamente.");
-  }
+
+if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL) ) {     Serial.println("[ACCEL S2] Não foi publicado corretamente."); }
+
+
+if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL) ) { Serial.println("[ACCEL S3] Não foi publicado corretamente."); }
 
   desconectarRede();
   Serial.println("==================================================\n");
@@ -250,9 +267,13 @@ void setup()
   // Setup Modem GSM
   Serial1.begin(BAUD_RATE, SERIAL_8N1, MODEM_RX, MODEM_TX);
   pinMode(MODEM_PWRKEY, OUTPUT);      // Configura Pinagem do modem GSM
-  digitalWrite(MODEM_PWRKEY, LOW);    // Garante estado conhecido
-  offModem();                         // Garante que modem está desconectado
-  Serial.println("[SETUP] Modem inicializado em estado off");
+  digitalWrite(MODEM_PWRKEY, HIGH);    // Garante estado conhecido
+
+  // Configura pino DTR (sleep/wake do modem)
+  // DTR HIGH garante que a UART do modem está ativa antes de qualquer comando AT
+  pinMode(MODEM_SLEEP, OUTPUT);
+  digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
+
   
   // Inicialização barramento I2C
   Wire.begin(21, 22); 
@@ -284,10 +305,20 @@ void loop()
 
     processarLeituraEnvio();
     timer_ciclo = millis();
+
+    if (fonte == FonteOFF) {
+        Serial.println("[ENERGIA] Tarefa concluida na bateria. A entrar em Deep Sleep imediato!");
+        iniciarDeepSleep();
+    }
   }
 
   else if (!primeiro_ciclo && (millis() - timer_ciclo >= (TEMPO_ENVIO_AC * 1000UL))) {
     processarLeituraEnvio();
     timer_ciclo = millis(); 
+
+    if (fonte == FonteOFF) {
+        Serial.println("[ENERGIA] Tarefa concluida na bateria. A entrar em Deep Sleep imediato!");
+        iniciarDeepSleep();
+    }
   } 
 }
