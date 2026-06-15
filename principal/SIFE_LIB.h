@@ -107,7 +107,7 @@ float realCurrent1 = 0;
 float realCurrent2 = 0; 
 float loadvoltage1 = 0; 
 float loadvoltage2 = 0; 
-float tensaoShutdown = 11.2; 
+float tensaoShutdown = 12.3; 
 float tensaoReinicioCarga = 13.2; 
 float safeBatteryV = 14.80;
 
@@ -149,7 +149,7 @@ void Pot_dig();
 void ContaCoulomb();
 void comandos();
 void iniciarDeepSleep();
-
+extern bool offModem();
 /*********************************************************************************************************
 * @brief Estima o SoC inicial com base na curva de tensão de circuito aberto(OCV) via interpolação linear por partes
 *********************************************************************************************************/ 
@@ -279,6 +279,9 @@ void iniciarDeepSleep() {
   if (loadvoltage1 <= tensaoShutdown) {
     esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, 1);
     Serial.println("Configurando o ESP32 para dormir até a rede voltar. Bateria com carga crítica");
+
+    Serial.println("Colocando o modem em sleep devido a bateria critica...");
+    offModem();
   } else {
     esp_sleep_enable_timer_wakeup(TEMPO_DE_SONO_LOADED * SEGUNDOS_PARA_MICROSEGUNDOS);
     Serial.println("Configurando o ESP32 para dormir por " + String(TEMPO_DE_SONO_LOADED) + " segundos. Bateria com carga OK");
