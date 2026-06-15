@@ -68,7 +68,7 @@ ESPEncrypt crypto(AES_KEY);
 
 int counterErrorTcp = 0;
 int counterErrorModemInit = 0;
-
+void waitingTime(const int wait_ms);
 /*******************************************************************************************************************************/
 // Coloca o modem em sleep de baixo consumo via CSCLK + pino DTR.
 // O modem mantém o registro de rede e retoma muito mais rápido do que um boot completo.
@@ -86,7 +86,7 @@ bool sleepModem()
 
     // Puxa DTR para LOW
     digitalWrite(MODEM_SLEEP, DTR_SET_SLEEP);
-    delay(100);
+    waitingTime(100);
 
     // Trava o estado lógico do pino DTR no domínio RTC
     rtc_gpio_hold_en(GPIO_NUM_14);
@@ -107,7 +107,7 @@ bool wakeModem()
 
     // Puxa DTR para HIGH
     digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
-    delay(50);
+    waitingTime(50);
 
     // Descarta bytes residuais
     while (SerialAT.available()) SerialAT.read();
@@ -158,11 +158,11 @@ bool powerModem() {
 
     // Se não respondeu, aí sim damos o pulso
     digitalWrite(MODEM_PWRKEY, LOW);
-    delay(1500); 
+    waitingTime(1500); 
     digitalWrite(MODEM_PWRKEY, HIGH);
     
     // Aguarda o boot e limpa o buffer
-    delay(5000);
+    waitingTime(5000);
     while(SerialAT.available()) SerialAT.read();
     return true;
 }
@@ -184,12 +184,12 @@ bool offModem()
 // adakhsgauisd **********************************************************************************************************
 void waitingTime(const int wait_ms) 
 {
-    esp_task_wdt_reset();
-    unsigned long aux = millis();
-    while(millis() - aux <= (unsigned long) wait_ms) {
-        client.loop();
-        delay(1);
-    }
+esp_task_wdt_reset();
+uint32_t start = millis();
+while ((uint32_t)(millis() - start) < wait_ms) {
+    client.loop();
+    yield();  
+}
 }
 
 /*******************************************************************************************************************************/
@@ -203,13 +203,10 @@ bool conectarRedeEbroker()
     wakeModem();
     powerModem();
     SerialAT.println("AT");
-    delay(3000);
+    waitingTime(3000);
     
     // Verifica inicialização correta do GSM
     if (!modem.init()) {
-        sendATCommand("+CPMS?");
-        sendATCommand("+CSCLK?");
-        sendATCommand("+CFUN?");
         Serial.println("  -> [REDE] ERRO: O modem nao respondeu.");
         
         counterErrorModemInit++; 
@@ -217,7 +214,7 @@ bool conectarRedeEbroker()
         
         if (counterErrorModemInit >= 3) {
             Serial.println("[CRÍTICO] Falha no modem 3 vezes seguidas. Reiniciando o ESP32...");
-            delay(2000); 
+            waitingTime(2000); 
             ESP.restart();
         }
         return false;
@@ -267,7 +264,7 @@ bool conectarRedeEbroker()
             
             // Aguarda 2 segundos antes de tentar de novo alimentando o watchdog
             unsigned long waitTime = millis();
-            while(millis() - waitTime < 2000) { esp_task_wdt_reset(); delay(10); }
+            while(millis() - waitTime < 2000) { esp_task_wdt_reset(); waitingTime(10); }
         }
     }
 
@@ -324,7 +321,6 @@ void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJ
 /******************************************************************************************************************/
 // Função dedicada para formatar e enviar os dados de um acelerômetro específico
 /******************************************************************************************************************/
-// Função dedicada para formatar e enviar os dados de um acelerômetro específico
 bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const char* topic) {
   String jsonsVibracaoTemp[NUM_AMOSTRAS/CHUNK_SIZE];
   
