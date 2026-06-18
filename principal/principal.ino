@@ -1,9 +1,3 @@
-/******************************************************************
- *  @brief
- *  @authors
- *  @warning
- *****************************************************************/
-
 // Inclusão de bibliotecas ******************************************
 #include <SPI.h>                
 #include <Adafruit_ADS1X15.h>
@@ -137,12 +131,12 @@ void processarLeituraEnvio()
   int16_t adc = ads.readADC_SingleEnded(0);
   medidaPressaoAtual = ads.computeVolts(adc) - 0.0024;
   if (medidaPressaoAtual < 0) medidaPressaoAtual = 0.0;
-  JsonPressao = getMedida(medidaPressaoAtual);
+  JsonPressao = getMedida(medidaPressaoAtual, "REALTIME");
 
-  // Obtém Json temperatura
+  // Obtém Json temperatura 
   medidaTemperaturaAtual = lerTemperaturaFiltrada();
   if (medidaTemperaturaAtual < 0) medidaTemperaturaAtual = 0.0;
-  JsonTemperatura = getMedida(medidaTemperaturaAtual);
+  JsonTemperatura = getMedida(medidaTemperaturaAtual, "REALTIME");
  
   // Coleta os dados dos sensores
   collectSensorSamples(accel1, bufferSensor1, nullptr);
@@ -150,12 +144,8 @@ void processarLeituraEnvio()
   collectSensorSamples(accel3, bufferSensor3, &I2C_2);
 
 
-  // Obtém medidas do SIFE
-  JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2);
-  Serial.println("[DEBUG SIFE] VF = " + String(loadvoltage2));
-  Serial.println("[DEBUG SIFE] VB = " + String(loadvoltage1));
-  Serial.println("[DEBUG SIFE] IB = " + String(realCurrent1));
-  Serial.println("[DEBUG SIFE] SOC = " + String(SoC));
+  // Obtém medidas do SIFE 
+  JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2, "REALTIME");
 
   // evitar bugs
   jsonSmall.clear();
@@ -165,7 +155,30 @@ void processarLeituraEnvio()
   esp_task_wdt_reset();
   Serial.println("[PASSO 2] Leitura concluida. Iniciando comunicacao com a Nuvem...");
 
-  if(!conectarRedeEbroker()) {
+  bool conexaoEstabelecida = conectarRedeEbroker();
+
+  // VALIDAÇÃO DE IP E DEAD SOCKET (1 Tentativa de Reconexão Forçada)
+  if (conexaoEstabelecida) {
+      if (!checkIP() || !client.loop()) {
+          Serial.println("  -> [REDE] IP Invalido ou Dead Socket (MQTT) detectado.");
+          Serial.println("  -> [REDE] Tentando reconexao forcada (1x)...");
+          
+          desconectarRede();
+          modem.gprsDisconnect(); // Força a queda do PDP Context
+          waitingTime(2000);
+          
+          conexaoEstabelecida = conectarRedeEbroker();
+          
+          if (conexaoEstabelecida) {
+              if (!checkIP() || !client.loop()) {
+                  Serial.println("  -> [REDE] Falha persistente de IP/Socket apos reconexao. Abortando.");
+                  conexaoEstabelecida = false;
+              }
+          }
+      }
+  }
+
+  if(!conexaoEstabelecida) {
     Serial.println("[FALHA] Nao foi possivel transmitir os dados neste ciclo.");
     Backup_MarcarFalha();
     Backup_ArmazenarSeNecessario(
@@ -188,7 +201,6 @@ void processarLeituraEnvio()
 
   // ----------------------------------
   esp_task_wdt_reset();
-  client.loop();
 
   Backup_EnviarPendentes();
   Serial.println("[PASSO 3] Enviando pacote de dados via MQTT...");
@@ -210,15 +222,17 @@ void processarLeituraEnvio()
   // Publicação dos dados dos acelerômetros 
   Serial.println("[PASSO 4] Enviando dados dos Acelerômetros...");
 
-  if( !enviarDadosAcelerometro(1, bufferSensor1, TOPIC_VIBRA_S1_REAL) ) {
+  if( !enviarDadosAcelerometro(1, bufferSensor1, TOPIC_VIBRA_S1_REAL, "REALTIME") ) {
     Serial.println("[ACCEL S1] Não foi publicado corretamente.");
   } 
   
+  if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL, "REALTIME") ) {     
+      Serial.println("[ACCEL S2] Não foi publicado corretamente."); 
+  }
 
-if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL) ) {     Serial.println("[ACCEL S2] Não foi publicado corretamente."); }
-
-
-if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL) ) { Serial.println("[ACCEL S3] Não foi publicado corretamente."); }
+  if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL, "REALTIME") ) { 
+      Serial.println("[ACCEL S3] Não foi publicado corretamente."); 
+  }
 
   desconectarRede();
   Serial.println("==================================================\n");
