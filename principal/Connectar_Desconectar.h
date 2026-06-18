@@ -39,6 +39,10 @@ static PubSubClient client(gsmClient);
 // Broker MQTT *************************************************************************************************
 #define MQTT_SERVER "broker.hivemq.com" 
 const int MQTT_PORT = 1883; 
+
+/******** SVI (APAGAR O DE CIMA E DESCOMENTAR O DE BAIXO) **************/
+//#define MQTT_SERVER "192.168.55.100" 
+//const int MQTT_PORT = 1884; 
 static char mqttMsgBuffer[BUFFER_MQTT_GSM];
 const int CHUNK_SIZE = 64;
 
@@ -188,8 +192,20 @@ esp_task_wdt_reset();
 uint32_t start = millis();
 while ((uint32_t)(millis() - start) < wait_ms) {
     client.loop();
-    yield();  
+    yield();  // só por precaucao
 }
+}
+
+/*******************************************************************************************************************************/
+bool checkIP() 
+{
+    String ip = modem.getLocalIP();
+    if(ip == "" || ip == "0.0.0.0") {
+        Serial.print("  -> [REDE] ERRO: IP Invalido: ");
+        Serial.println(ip);
+        return false;
+    }
+    return true;
 }
 
 /*******************************************************************************************************************************/
@@ -291,13 +307,14 @@ void desconectarRede()
 }
 
 /*******************************************************************************************************************************/
-// Função que processa Json de vibração (acelerômetro)
-void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJsons[])
+// Função que processa Json de vibração (acelerômetro) 
+void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJsons[], const char* tipoMensagem)
 {
     for (int parte = 0; parte < NUM_AMOSTRAS / CHUNK_SIZE; parte++)
     {
         esp_task_wdt_reset(); 
         jsonLarge.clear();
+        jsonLarge["tipo"] = tipoMensagem; 
         jsonLarge["s"] = sensorID;
         jsonLarge["p"] = parte + 1;
 
@@ -321,10 +338,10 @@ void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJ
 /******************************************************************************************************************/
 // Função dedicada para formatar e enviar os dados de um acelerômetro específico
 /******************************************************************************************************************/
-bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const char* topic) {
+bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const char* topic, const char* tipoMensagem) {
   String jsonsVibracaoTemp[NUM_AMOSTRAS/CHUNK_SIZE];
   
-  getVibracao(sensorId, buffer, jsonsVibracaoTemp);
+  getVibracao(sensorId, buffer, jsonsVibracaoTemp, tipoMensagem);
   
   bool sucessoTotal = true;
 
@@ -344,11 +361,11 @@ bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const ch
 }
 
 /********************************************************************************************************/
-// Obtém medida criptografada
-String getMedida(float medida)
+// Obtém medida criptografada 
+String getMedida(float medida, const char* tipoMensagem)
 {
     jsonSmall.clear();
-    jsonSmall["tipo"] = "REALTIME";
+    jsonSmall["tipo"] = tipoMensagem;
     jsonSmall["val"] = medida;
     String jsonString;
     serializeJson(jsonSmall, jsonString);
@@ -357,10 +374,11 @@ String getMedida(float medida)
 }
 
 /************************************************************************************************************************ */
-String getEnergiaSife(float v_f, float v_b, float i_b, float s, int r, bool e1, bool e2)
+// Obtém dados de energia 
+String getEnergiaSife(float v_f, float v_b, float i_b, float s, int r, bool e1, bool e2, const char* tipoMensagem)
 {
     jsonSmall.clear();
-    jsonSmall["tipo"] = "ENERGIA";
+    jsonSmall["tipo"] = tipoMensagem; 
     jsonSmall["V_Fonte"] = v_f;
     jsonSmall["V_Bat"] = v_b;
     jsonSmall["I_Bat"] = i_b; 
