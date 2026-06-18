@@ -61,6 +61,7 @@ static void reduzirAmostras(AmostraAcelerometro *destino, const AmostraAcelerome
 // Envia vibracao de backup em um unico pacote (amostras reduzidas).
 static bool enviarVibracaoBackup(int sensorId, const AmostraAcelerometro *buffer, const char *topic) {
 	jsonLarge.clear();
+	jsonLarge["tipo"] = "BACKUP";
 	jsonLarge["s"] = sensorId;
 	jsonLarge["p"] = 1;
 	jsonLarge["n"] = BACKUP_NUM_AMOSTRAS;
@@ -199,9 +200,10 @@ void Backup_EnviarPendentes() {
 	for (uint8_t i = 0; i < conteudoBackup; i++) {
 		bool sucesso = true;
 		BackupRecord &record = backupRegistros[i];
-		String jsonSife = getEnergiaSife(record.v_fonte, record.v_bat, record.i_bat, record.soc, record.fonte, record.erro_ina1, record.erro_ina2);
-		String jsonPressao = getMedida(record.pressao);
-		String jsonTemperatura = getMedida(record.temperatura);
+		
+		String jsonSife = getEnergiaSife(record.v_fonte, record.v_bat, record.i_bat, record.soc, record.fonte, record.erro_ina1, record.erro_ina2, "BACKUP");
+		String jsonPressao = getMedida(record.pressao, "BACKUP");
+		String jsonTemperatura = getMedida(record.temperatura, "BACKUP");
 
 		if (!client.publish(TOPIC_ENERGIA_BACKUP, jsonSife.c_str())) {
 			sucesso = false;
