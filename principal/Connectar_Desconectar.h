@@ -40,9 +40,7 @@ static PubSubClient client(gsmClient);
 #define MQTT_SERVER "broker.hivemq.com" 
 const int MQTT_PORT = 1883; 
 
-/******** SVI (APAGAR O DE CIMA E DESCOMENTAR O DE BAIXO) **************/
-//#define MQTT_SERVER "192.168.55.100" 
-//const int MQTT_PORT = 1884; 
+
 static char mqttMsgBuffer[BUFFER_MQTT_GSM];
 const int CHUNK_SIZE = 64;
 
