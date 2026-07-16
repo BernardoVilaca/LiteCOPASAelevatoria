@@ -1,0 +1,19 @@
+[
+    {
+        "id": "catch_mongo_error",
+        "type": "catch",
+        "z": "1fc2399fd2a5f2cd",
+        "name": "Captura Erro MongoDB",
+        "scope": [
+            "e913db7c1539b0d3"
+        ],
+        "uncaught": false,
+        "x": 1780,
+        "y": 240,
+        "wires": [
+            [
+                "func_trata_erro"
+            ]
+        ]
+    }
+]
