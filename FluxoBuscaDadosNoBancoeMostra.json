@@ -1,0 +1,3196 @@
+[
+    {
+        "id": "b1ee4db08bf0ea09",
+        "type": "tab",
+        "label": "Fluxo 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d2a9cc82619d0aa3",
+        "type": "group",
+        "z": "b1ee4db08bf0ea09",
+        "name": "1. Aquisição MQTT e Descriptografia",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#bfdbff",
+            "fill-opacity": "0.3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "420fc3c509f3f6a8",
+            "97453577dd309a1e",
+            "9130b1af3eeb2377",
+            "ec0ae3646640540f",
+            "37ddc238e5ae861b",
+            "0d3ef3ca5b202e12",
+            "9559b5f2c3174c8f",
+            "8773d646b8234983",
+            "b2d24bd64ee34074",
+            "2bff3feffab4b3d5",
+            "334b7e7dcfcbd54b",
+            "13a7ebd1416fc8c7",
+            "6f63f9e1d5254bdb",
+            "d91c3c160a08bf9a",
+            "c7c1583a903f8e0c",
+            "d3de87578ec3468e",
+            "ee1d5bb6dd53e3e5",
+            "197532fe1460c080",
+            "642f6a6d8bcea561",
+            "1ef316f758e853b0",
+            "7099c7775178fb43",
+            "67447e4f9e14d20c",
+            "88ba3c57fd920329",
+            "5c3699a6866a8af0",
+            "6d2baa355914b1b2",
+            "9379ea8871274831",
+            "5e859672e5128982",
+            "96761621c4f85235",
+            "dfc7abc08fe8563a",
+            "4d6c16bb5acf5d58"
+        ],
+        "x": 174,
+        "y": 19,
+        "w": 812,
+        "h": 722
+    },
+    {
+        "id": "d235c590a36caf76",
+        "type": "group",
+        "z": "b1ee4db08bf0ea09",
+        "name": "2. Processamento (sensores & energia)",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#d1f3d1",
+            "fill-opacity": "0.3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "293a400a640f8562",
+            "b95c671f6b8137bf",
+            "87cef21aca1aa9f0",
+            "19317f20c0940a14",
+            "87489391408349d9",
+            "52ae88cdfcacd16d",
+            "c028fa5582df82f1",
+            "7408dbabbf20b017",
+            "941bfea3fbbb0ab2",
+            "65d3d67fd21bba39"
+        ],
+        "x": 994,
+        "y": 399,
+        "w": 958,
+        "h": 815.5
+    },
+    {
+        "id": "52926e791328d2b8",
+        "type": "group",
+        "z": "b1ee4db08bf0ea09",
+        "name": "4. Banco de  dados",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#f3d1f3",
+            "fill-opacity": "0.3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "02d7aa3e47d1a60c",
+            "248413b9adb16fb9",
+            "b23169d6c5a360dc",
+            "4b4ac2ed412358c7",
+            "f8ae2587a2ed9807",
+            "77a07b60a2a79d54",
+            "ab87aebdd95977e3"
+        ],
+        "x": 994,
+        "y": 16.5,
+        "w": 952,
+        "h": 367
+    },
+    {
+        "id": "e1a013899e3b1bfc",
+        "type": "group",
+        "z": "b1ee4db08bf0ea09",
+        "name": "5. Dashboard ",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#ffe6cc",
+            "fill-opacity": "0.3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "4045123d4728d62a",
+            "4907dd5efda0f588",
+            "ec331a12f9cc3f80",
+            "22397033d1944f4a",
+            "1288be3d2ebd47b6",
+            "9b949ec5a41d31ef",
+            "b1619985e8105d76",
+            "1815a5228376226a",
+            "155395a3b784f28e",
+            "9dcf95ae1318d0ac",
+            "e5067822065bfc03",
+            "da93ea497fe71773",
+            "d21ce6d0cdd7e444",
+            "292cfba20751f8bd",
+            "0fa479a0b0359dfd",
+            "c39513db9768d30b",
+            "86fa82f4b880bfb6",
+            "250dc3a939f748fe",
+            "d91df3193fd4f54d",
+            "bce9cc9d82798804",
+            "347cfc398c965c40",
+            "7859def0a453e868",
+            "a5d3235271b96c85",
+            "196e259d81a2da2b",
+            "2e6e7c21427119c6"
+        ],
+        "x": 2004,
+        "y": 19,
+        "w": 322,
+        "h": 942
+    },
+    {
+        "id": "grupo_testes",
+        "type": "group",
+        "z": "b1ee4db08bf0ea09",
+        "name": "1.2 Simulador de dados",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#ffcccc",
+            "fill-opacity": "0.3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "inject_pressao_direto",
+            "inject_temp_direto",
+            "inject_energia_direto",
+            "inject_vibra_direto",
+            "func_gerador_vibra_direto",
+            "0262990b91a5988b",
+            "1e32c28403160f93",
+            "1a30e5257490a3f2",
+            "4bfc6617d4631a61",
+            "432058fa020fd3c6",
+            "4a37b734d6cd938e",
+            "10ccc5da1ec5ccf1",
+            "440136e60cb87283",
+            "08f9f7f788aba478",
+            "2de8316bebbd9884"
+        ],
+        "x": 294,
+        "y": 799,
+        "w": 592,
+        "h": 302
+    },
+    {
+        "id": "52ae88cdfcacd16d",
+        "type": "group",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "3. Processamento de vibração ",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#fff1b8",
+            "fill-opacity": "0.3",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "94ad3f98ccf96f32",
+            "96896d2fd65da0ea",
+            "d4696a14f34e3762",
+            "145f16ed771ce171",
+            "8b9b5d0f162ba364",
+            "81cc773d2edcba81",
+            "413b23393caec911",
+            "cf9fe503fb6f11c3",
+            "80f7b0b8042f02dd",
+            "e9c61c5f4e6bd40e",
+            "5170a276ebbdb5f8",
+            "2096f1b8679eb831",
+            "ec2d93f6346a57c8",
+            "dcc58521975d2d02",
+            "b335f8f4678badbe",
+            "7e06e48fd2f21453",
+            "45d684d4cf393960",
+            "27b79ebfad802206",
+            "e4df9147d4e1921d",
+            "bef9dbe34b63d8cd",
+            "50a473514b786f20",
+            "d6ba75dfdf99d8b2",
+            "2c65d36feec74d7b",
+            "a68a252f96534d59",
+            "455591a5654391ce",
+            "99663bc991a25657",
+            "a9fe790eaca77700",
+            "61caba29dbaae9be"
+        ],
+        "x": 1024,
+        "y": 659,
+        "w": 902,
+        "h": 529.5
+    },
+    {
+        "id": "d6ba75dfdf99d8b2",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Banco de dados in",
+        "mode": "link",
+        "links": [
+            "02d7aa3e47d1a60c"
+        ],
+        "x": 1885,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "02d7aa3e47d1a60c",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52926e791328d2b8",
+        "name": "Entrada de sensores out",
+        "links": [
+            "c028fa5582df82f1",
+            "d6ba75dfdf99d8b2"
+        ],
+        "x": 1035,
+        "y": 140,
+        "wires": [
+            [
+                "248413b9adb16fb9"
+            ]
+        ]
+    },
+    {
+        "id": "248413b9adb16fb9",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52926e791328d2b8",
+        "name": "Prepara MongoDB",
+        "func": "if (!msg.measurement) return null;\n\n// Usa a medição antiga como nome da Collection no Mongo\nmsg.collection = msg.measurement;\n\n// Embrulha o documento JSON com timestamp\nmsg.payload = {\n    timestamp: new Date(),\n    dados: msg.payload\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1190,
+        "y": 140,
+        "wires": [
+            [
+                "b23169d6c5a360dc",
+                "4b4ac2ed412358c7"
+            ]
+        ]
+    },
+    {
+        "id": "420fc3c509f3f6a8",
+        "type": "mqtt in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Pressão (RT/BKP)",
+        "topic": "sife_felipe/pressao/#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9ae293967e57c171",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 290,
+        "y": 120,
+        "wires": [
+            [
+                "9559b5f2c3174c8f"
+            ]
+        ]
+    },
+    {
+        "id": "97453577dd309a1e",
+        "type": "mqtt in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Temp (RT/BKP)",
+        "topic": "sife_felipe/temperatura/#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9ae293967e57c171",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 280,
+        "y": 180,
+        "wires": [
+            [
+                "8773d646b8234983"
+            ]
+        ]
+    },
+    {
+        "id": "293a400a640f8562",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Processa Pressão",
+        "func": "var payloadObj = msg.payload;\nif (typeof msg.payload === 'string') {\n    try {\n        payloadObj = JSON.parse(msg.payload);\n    } catch(e) {\n        return null;\n    }\n}\n\nvar isBkp = (msg.topic.indexOf('backup') !== -1);\nvar v = Number(payloadObj.val);\nvar tp = payloadObj.tipo || (isBkp ? 'BACKUP' : 'REALTIME');\nvar m_inf = {measurement:'Parametros_Pressao_Tensao', payload:{tensao:v, origem:tp}};\nif(!isBkp) return [m_inf, {payload:v, topic:\"Pressão\"}];\nreturn [m_inf, null];",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1170,
+        "y": 440,
+        "wires": [
+            [
+                "c028fa5582df82f1"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b95c671f6b8137bf",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Processa Temp",
+        "func": "var payloadObj = msg.payload;\nif (typeof msg.payload === 'string') {\n    try {\n        payloadObj = JSON.parse(msg.payload);\n    } catch(e) {\n        return null;\n    }\n}\n\nvar isBkp = (msg.topic.indexOf('backup') !== -1);\nvar v = Number(payloadObj.val);\nvar tp = payloadObj.tipo || (isBkp ? 'BACKUP' : 'REALTIME');\nvar m_inf = {measurement:'Parametros_Temperatura', payload:{temperatura:v, origem:tp}};\nif(!isBkp) return [m_inf, {payload:v, topic:\"Temperatura\"}];\nreturn [m_inf, null];",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1170,
+        "y": 500,
+        "wires": [
+            [
+                "c028fa5582df82f1"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "4045123d4728d62a",
+        "type": "ui-gauge",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "name": "Pressão",
+        "group": "aaf3169817ec4094",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": "6",
+        "height": "5",
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Pressão",
+        "alwaysShowTitle": false,
+        "units": "V",
+        "icon": "",
+        "prefix": "",
+        "suffix": "V",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#ffdbfd",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "0.825",
+                "color": "#c9beff",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "1.65",
+                "color": "#8494ff",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "2.475",
+                "color": "#6367ff",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "3.3",
+        "sizeThickness": "25",
+        "sizeGap": "50",
+        "sizeKeyThickness": "15",
+        "className": "",
+        "x": 2120,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4907dd5efda0f588",
+        "type": "ui-gauge",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "name": "Temperatura",
+        "group": "aaf3169817ec4094",
+        "order": 1,
+        "value": "payload",
+        "valueType": "msg",
+        "width": "6",
+        "height": "5",
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Temperatura",
+        "alwaysShowTitle": false,
+        "units": "°C",
+        "icon": "",
+        "prefix": "",
+        "suffix": "°C",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#c1dc44",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "50",
+                "color": "#f4dc34",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "90",
+                "color": "#e4745c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "110",
+                "color": "#f80606",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "120",
+        "sizeThickness": "25",
+        "sizeGap": "50",
+        "sizeKeyThickness": "15",
+        "className": "",
+        "x": 2130,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9130b1af3eeb2377",
+        "type": "mqtt in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Vibra S1 (RT/BKP)",
+        "topic": "sife_felipe/vibracao/sensor1/#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9ae293967e57c171",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 290,
+        "y": 300,
+        "wires": [
+            [
+                "b2d24bd64ee34074"
+            ]
+        ]
+    },
+    {
+        "id": "94ad3f98ccf96f32",
+        "type": "switch",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Filtro RT / BKP",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "dados",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "backup",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1180,
+        "y": 720,
+        "wires": [
+            [
+                "145f16ed771ce171"
+            ],
+            [
+                "e4df9147d4e1921d"
+            ]
+        ]
+    },
+    {
+        "id": "145f16ed771ce171",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Reassembler S1",
+        "func": "var p = msg.payload.p;\nvar t = 8; // Total de partes\n\nif (!p) return null;\n\n// GATILHO DE SEGURANÇA: Se chegar a parte 1, é um ciclo novo. \n// Limpa o lixo da memória caso a rede tenha perdido algum pacote no ciclo anterior.\nif (p === 1) {\n  context.set('bX', {}); context.set('bY', {}); context.set('bZ', {}); context.set('cnt', 0);\n}\n\nvar bX = context.get('bX') || {};\nvar bY = context.get('bY') || {};\nvar bZ = context.get('bZ') || {};\nvar cnt = context.get('cnt') || 0;\n\n// Salva a amostra se ainda não tiver recebido esta parte\nif (!bX[p]) {\n  bX[p] = msg.payload.x;\n  bY[p] = msg.payload.y;\n  bZ[p] = msg.payload.z;\n  cnt++;\n}\n\n// Quando juntar as 8 peças do quebra-cabeça, dispara para o gráfico!\nif (cnt >= t) {\n  var fX = [], fY = [], fZ = [];\n  for (var i = 1; i <= t; i++) {\n    if (bX[i]) fX = fX.concat(bX[i]);\n    if (bY[i]) fY = fY.concat(bY[i]);\n    if (bZ[i]) fZ = fZ.concat(bZ[i]);\n  }\n\n  context.set('bX', {}); context.set('bY', {}); context.set('bZ', {}); context.set('cnt', 0);\n\n  msg.payload = {\n    tipo: 'REALTIME_FULL',\n    x: fX, y: fY, z: fZ,\n    x_samples: fX, y_samples: fY, z_samples: fZ\n  };\n  return msg;\n}\n\ncontext.set('bX', bX); context.set('bY', bY); context.set('bZ', bZ); context.set('cnt', cnt);\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1380,
+        "y": 700,
+        "wires": [
+            [
+                "413b23393caec911",
+                "e9c61c5f4e6bd40e",
+                "5170a276ebbdb5f8",
+                "2096f1b8679eb831"
+            ]
+        ]
+    },
+    {
+        "id": "413b23393caec911",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Amostra Gráfico S1",
+        "func": "if (msg.payload.tipo === 'REALTIME_FULL') {\n  var mensagens = [];\n\n  // Cria um tempo base retroativo (separa as amostras artificialmente em milissegundos)\n  // Isso impede o Node-RED de esmagar todos os 512 pontos no mesmo pixel da tela.\n  var tempoBase = new Date().getTime() - msg.payload.x.length;\n\n  for (var i = 0; i < msg.payload.x.length; i++) {\n    var t = tempoBase + i;\n    mensagens.push({ topic: 'X', payload: msg.payload.x[i], timestamp: t });\n    mensagens.push({ topic: 'Y', payload: msg.payload.y[i], timestamp: t });\n    mensagens.push({ topic: 'Z', payload: msg.payload.z[i], timestamp: t });\n  }\n  return [mensagens];\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1660,
+        "y": 700,
+        "wires": [
+            [
+                "2c65d36feec74d7b"
+            ]
+        ]
+    },
+    {
+        "id": "bce9cc9d82798804",
+        "type": "ui-chart",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "3b61de3803f2d76b",
+        "name": "Gráfico S1",
+        "label": "",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "",
+        "yAxisPropertyType": "property",
+        "ymin": "",
+        "ymax": "",
+        "bins": "",
+        "action": "append",
+        "stackSeries": false,
+        "pointRadius": "",
+        "showLegend": true,
+        "removeOlder": "7",
+        "removeOlderUnit": "86400",
+        "removeOlderPoints": "100",
+        "colors": [
+            "#3d065a",
+            "#b51a62",
+            "#70d4b4",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": "6",
+        "className": "",
+        "interpolation": "linear",
+        "x": 2150,
+        "y": 840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e9c61c5f4e6bd40e",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa X1",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.x; // Mude para .y ou .z\nvar eixo = \"x\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s1\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1650,
+        "y": 780,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "5170a276ebbdb5f8",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa Y1",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.y; // Mude para .y ou .z\nvar eixo = \"y\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s1\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1650,
+        "y": 820,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "2096f1b8679eb831",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa Z1",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.z; // Mude para .y ou .z\nvar eixo = \"z\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s1\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1650,
+        "y": 740,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "ec331a12f9cc3f80",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "d7c38aa5eef99eea",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico X:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 2120,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "22397033d1944f4a",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "d7c38aa5eef99eea",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico Y:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 2120,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "1288be3d2ebd47b6",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "d7c38aa5eef99eea",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico Z:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 2120,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "ec0ae3646640540f",
+        "type": "mqtt in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Vibra S2 (RT/BKP)",
+        "topic": "sife_felipe/vibracao/sensor2/#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9ae293967e57c171",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 290,
+        "y": 420,
+        "wires": [
+            [
+                "2bff3feffab4b3d5"
+            ]
+        ]
+    },
+    {
+        "id": "96896d2fd65da0ea",
+        "type": "switch",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Filtro RT / BKP",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "dados",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "backup",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1180,
+        "y": 860,
+        "wires": [
+            [
+                "8b9b5d0f162ba364"
+            ],
+            [
+                "bef9dbe34b63d8cd"
+            ]
+        ]
+    },
+    {
+        "id": "8b9b5d0f162ba364",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Reassembler S2",
+        "func": "var p = msg.payload.p;\nvar t = 8; // Total de partes\n\nif (!p) return null;\n\n// GATILHO DE SEGURANÇA: Se chegar a parte 1, é um ciclo novo. \n// Limpa o lixo da memória caso a rede tenha perdido algum pacote no ciclo anterior.\nif (p === 1) {\n  context.set('bX', {}); context.set('bY', {}); context.set('bZ', {}); context.set('cnt', 0);\n}\n\nvar bX = context.get('bX') || {};\nvar bY = context.get('bY') || {};\nvar bZ = context.get('bZ') || {};\nvar cnt = context.get('cnt') || 0;\n\n// Salva a amostra se ainda não tiver recebido esta parte\nif (!bX[p]) {\n  bX[p] = msg.payload.x;\n  bY[p] = msg.payload.y;\n  bZ[p] = msg.payload.z;\n  cnt++;\n}\n\n// Quando juntar as 8 peças do quebra-cabeça, dispara para o gráfico!\nif (cnt >= t) {\n  var fX = [], fY = [], fZ = [];\n  for (var i = 1; i <= t; i++) {\n    if (bX[i]) fX = fX.concat(bX[i]);\n    if (bY[i]) fY = fY.concat(bY[i]);\n    if (bZ[i]) fZ = fZ.concat(bZ[i]);\n  }\n\n  context.set('bX', {}); context.set('bY', {}); context.set('bZ', {}); context.set('cnt', 0);\n\n  msg.payload = {\n    tipo: 'REALTIME_FULL',\n    x: fX, y: fY, z: fZ,\n    x_samples: fX, y_samples: fY, z_samples: fZ\n  };\n  return msg;\n}\n\ncontext.set('bX', bX); context.set('bY', bY); context.set('bZ', bZ); context.set('cnt', cnt);\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1380,
+        "y": 840,
+        "wires": [
+            [
+                "cf9fe503fb6f11c3",
+                "ec2d93f6346a57c8",
+                "dcc58521975d2d02",
+                "b335f8f4678badbe"
+            ]
+        ]
+    },
+    {
+        "id": "cf9fe503fb6f11c3",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Amostra Gráfico S2",
+        "func": "if (msg.payload.tipo === 'REALTIME_FULL') {\n  var mensagens = [];\n\n  // Cria um tempo base retroativo (separa as amostras artificialmente em milissegundos)\n  // Isso impede o Node-RED de esmagar todos os 512 pontos no mesmo pixel da tela.\n  var tempoBase = new Date().getTime() - msg.payload.x.length;\n\n  for (var i = 0; i < msg.payload.x.length; i++) {\n    var t = tempoBase + i;\n    mensagens.push({ topic: 'X', payload: msg.payload.x[i], timestamp: t });\n    mensagens.push({ topic: 'Y', payload: msg.payload.y[i], timestamp: t });\n    mensagens.push({ topic: 'Z', payload: msg.payload.z[i], timestamp: t });\n  }\n  return [mensagens];\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1650,
+        "y": 860,
+        "wires": [
+            [
+                "a68a252f96534d59"
+            ]
+        ]
+    },
+    {
+        "id": "347cfc398c965c40",
+        "type": "ui-chart",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "a080f4c97c5f2ce7",
+        "name": "Gráfico S2",
+        "label": "",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "",
+        "yAxisPropertyType": "property",
+        "ymin": "",
+        "ymax": "",
+        "bins": "",
+        "action": "append",
+        "stackSeries": false,
+        "pointRadius": "",
+        "showLegend": true,
+        "removeOlder": "7",
+        "removeOlderUnit": "86400",
+        "removeOlderPoints": "100",
+        "colors": [
+            "#3d065a",
+            "#b51a62",
+            "#70d4b4",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": "6",
+        "className": "",
+        "interpolation": "linear",
+        "x": 2150,
+        "y": 880,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ec2d93f6346a57c8",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa X2",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.x; // Mude para .y ou .z\nvar eixo = \"x\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s2\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 900,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "dcc58521975d2d02",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa Y2",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.y; // Mude para .y ou .z\nvar eixo = \"y\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s2\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 940,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b335f8f4678badbe",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa Z2",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.z; // Mude para .y ou .z\nvar eixo = \"z\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s2\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 980,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "9b949ec5a41d31ef",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "84e6070ea6a132bf",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico X:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 2120,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "b1619985e8105d76",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "84e6070ea6a132bf",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico Y:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 2120,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "1815a5228376226a",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "84e6070ea6a132bf",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico Z:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 2120,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "37ddc238e5ae861b",
+        "type": "mqtt in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Vibra S3 (RT/BKP)",
+        "topic": "sife_felipe/vibracao/sensor3/#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9ae293967e57c171",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 290,
+        "y": 560,
+        "wires": [
+            [
+                "334b7e7dcfcbd54b"
+            ]
+        ]
+    },
+    {
+        "id": "d4696a14f34e3762",
+        "type": "switch",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Filtro RT / BKP",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "dados",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "backup",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1200,
+        "y": 1020,
+        "wires": [
+            [
+                "81cc773d2edcba81"
+            ],
+            [
+                "50a473514b786f20"
+            ]
+        ]
+    },
+    {
+        "id": "81cc773d2edcba81",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Reassembler S3",
+        "func": "var p = msg.payload.p;\nvar t = 8; // Total de partes\n\nif (!p) return null;\n\n// GATILHO DE SEGURANÇA: Se chegar a parte 1, é um ciclo novo. \n// Limpa o lixo da memória caso a rede tenha perdido algum pacote no ciclo anterior.\nif (p === 1) {\n  context.set('bX', {}); context.set('bY', {}); context.set('bZ', {}); context.set('cnt', 0);\n}\n\nvar bX = context.get('bX') || {};\nvar bY = context.get('bY') || {};\nvar bZ = context.get('bZ') || {};\nvar cnt = context.get('cnt') || 0;\n\n// Salva a amostra se ainda não tiver recebido esta parte\nif (!bX[p]) {\n  bX[p] = msg.payload.x;\n  bY[p] = msg.payload.y;\n  bZ[p] = msg.payload.z;\n  cnt++;\n}\n\n// Quando juntar as 8 peças do quebra-cabeça, dispara para o gráfico!\nif (cnt >= t) {\n  var fX = [], fY = [], fZ = [];\n  for (var i = 1; i <= t; i++) {\n    if (bX[i]) fX = fX.concat(bX[i]);\n    if (bY[i]) fY = fY.concat(bY[i]);\n    if (bZ[i]) fZ = fZ.concat(bZ[i]);\n  }\n\n  context.set('bX', {}); context.set('bY', {}); context.set('bZ', {}); context.set('cnt', 0);\n\n  msg.payload = {\n    tipo: 'REALTIME_FULL',\n    x: fX, y: fY, z: fZ,\n    x_samples: fX, y_samples: fY, z_samples: fZ\n  };\n  return msg;\n}\n\ncontext.set('bX', bX); context.set('bY', bY); context.set('bZ', bZ); context.set('cnt', cnt);\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1400,
+        "y": 1000,
+        "wires": [
+            [
+                "80f7b0b8042f02dd",
+                "7e06e48fd2f21453",
+                "45d684d4cf393960",
+                "27b79ebfad802206"
+            ]
+        ]
+    },
+    {
+        "id": "80f7b0b8042f02dd",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Amostra Gráfico S3",
+        "func": "if (msg.payload.tipo === 'REALTIME_FULL') {\n  var mensagens = [];\n\n  // Cria um tempo base retroativo (separa as amostras artificialmente em milissegundos)\n  // Isso impede o Node-RED de esmagar todos os 512 pontos no mesmo pixel da tela.\n  var tempoBase = new Date().getTime() - msg.payload.x.length;\n\n  for (var i = 0; i < msg.payload.x.length; i++) {\n    var t = tempoBase + i;\n    mensagens.push({ topic: 'X', payload: msg.payload.x[i], timestamp: t });\n    mensagens.push({ topic: 'Y', payload: msg.payload.y[i], timestamp: t });\n    mensagens.push({ topic: 'Z', payload: msg.payload.z[i], timestamp: t });\n  }\n  return [mensagens];\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1650,
+        "y": 1020,
+        "wires": [
+            [
+                "455591a5654391ce"
+            ]
+        ]
+    },
+    {
+        "id": "7859def0a453e868",
+        "type": "ui-chart",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "3cb72d4a56edc245",
+        "name": "Gráfico S3",
+        "label": "",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "timestamp",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": "",
+        "action": "append",
+        "stackSeries": false,
+        "pointRadius": "",
+        "showLegend": true,
+        "removeOlder": "7",
+        "removeOlderUnit": "86400",
+        "removeOlderPoints": "100",
+        "colors": [
+            "#3d065a",
+            "#b51a62",
+            "#70d4b4",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": "6",
+        "className": "",
+        "interpolation": "linear",
+        "x": 2150,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7e06e48fd2f21453",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa X3",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.x; // Mude para .y ou .z\nvar eixo = \"x\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s3\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 1060,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "45d684d4cf393960",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa Y3",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.y; // Mude para .y ou .z\nvar eixo = \"y\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s3\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 1100,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "27b79ebfad802206",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "FFT Nativa Z3",
+        "func": "// === ATENÇÃO: CONFIGURE ESTAS 3 LINHAS PARA CADA NÓ ===\nvar data = msg.payload.z; // Mude para .y ou .z\nvar eixo = \"z\";           // Mude para \"y\" ou \"z\"\nvar sensor = \"s3\";        // Mude para \"s2\" ou \"s3\"\n// ======================================================\n\nif (!Array.isArray(data) || data.length === 0) return null;\n\nvar sr = 800, sz = 1024;\nvar n_samples = data.length;\n\n// 1. Calcula a média (Remove o DC Offset) para matar o pico de 384Hz\nvar sum = 0;\nfor (var i = 0; i < n_samples; i++) sum += data[i];\nvar mean = sum / n_samples;\n\n// 2. Preenche os arrays aplicando a correção e o Zero-Padding\nvar re = new Float32Array(sz), im = new Float32Array(sz);\nfor (var i = 0; i < sz; i++) {\n    if (i < n_samples) re[i] = data[i] - mean;\n    else re[i] = 0;\n}\n\n// 3. Matemática bruta da FFT\nvar N = sz;\nfor (var i = 0; i < N; i++) {\n    var k = N, j = 0;\n    for (var l = 1; l < N; l *= 2) { k >>= 1; j += k * ((i / l) % 2 | 0); }\n    if (j > i) { var t = re[i]; re[i] = re[j]; re[j] = t; }\n}\nfor (var l = 2; l <= N; l *= 2) {\n    var wRe = Math.cos(-2 * Math.PI / l), wIm = Math.sin(-2 * Math.PI / l);\n    for (var i = 0; i < N; i += l) {\n        var uRe = 1, uIm = 0;\n        for (var j = 0; j < l / 2; j++) {\n            var reIdx = i + j, imIdx = i + j + l / 2;\n            var tRe = uRe * re[imIdx] - uIm * im[imIdx];\n            var tIm = uRe * im[imIdx] + uIm * re[imIdx];\n            re[imIdx] = re[reIdx] - tRe; im[imIdx] = im[reIdx] - tIm;\n            re[reIdx] += tRe; im[reIdx] += tIm;\n            var nURe = uRe * wRe - uIm * wIm;\n            uIm = uRe * wIm + uIm * wRe; uRe = nURe;\n        }\n    }\n}\n\n// 4. Busca os picos e monta o espectro\nvar pM = 0, pI = 0, pts = [];\nfor (var k = 4; k < sz / 2; k++) {\n    var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]) / (sz / 2);\n    if (mag > 0.5) { // Limiar de ruído\n        pts.push([{ magnitude: mag, frequency: k * (sr / sz) }, { axis: eixo, sensor: sensor.toUpperCase() }]);\n        if (mag > pM) { pM = mag; pI = k; }\n    }\n}\nvar fP = pI * (sr / sz);\n\n// 5. Monta os pacotes dinamicamente para o Node-RED e MongoDB\nvar m_p = {\n    measurement: \"accelfft_\" + eixo + \"_\" + sensor,\n    payload: {}\n};\nm_p.payload[\"frequencia_pico_\" + eixo] = fP;\nm_p.payload[\"magnitude_pico_\" + eixo] = pM;\n\nvar m_s = {\n    measurement: \"accelfft_spectrum_\" + eixo + \"_\" + sensor,\n    payload: pts\n};\nvar m_d = { payload: fP.toFixed(2) + \" Hz\" };\n\nif (pts.length === 0) m_s = null;\nreturn [m_p, m_s, m_d];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1640,
+        "y": 1140,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            [
+                "d6ba75dfdf99d8b2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "155395a3b784f28e",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "fb7f9a135248ac64",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico X:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 2120,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "9dcf95ae1318d0ac",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "fb7f9a135248ac64",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico Y:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 2120,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "e5067822065bfc03",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "fb7f9a135248ac64",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Pico Z:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 2120,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "0d3ef3ca5b202e12",
+        "type": "mqtt in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Energia SIFE",
+        "topic": "sife_felipe/energia/#",
+        "qos": "0",
+        "datatype": "utf8",
+        "broker": "9ae293967e57c171",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 270,
+        "y": 660,
+        "wires": [
+            [
+                "13a7ebd1416fc8c7"
+            ]
+        ]
+    },
+    {
+        "id": "87cef21aca1aa9f0",
+        "type": "switch",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Filtro Energia RT / BKP",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "dados",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "backup",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1190,
+        "y": 560,
+        "wires": [
+            [
+                "19317f20c0940a14"
+            ],
+            [
+                "87489391408349d9"
+            ]
+        ]
+    },
+    {
+        "id": "da93ea497fe71773",
+        "type": "ui-gauge",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "name": "Bateria (SoC)",
+        "group": "grupo_sife",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": "5",
+        "height": "7",
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Bateria SIFE",
+        "alwaysShowTitle": false,
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "%",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#ca3838",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "20",
+                "color": "#e6e600",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "50",
+                "color": "#00b500",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 100,
+        "sizeThickness": "25",
+        "sizeGap": "50",
+        "sizeKeyThickness": "15",
+        "className": "",
+        "x": 2130,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "250dc3a939f748fe",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "grupo_sife",
+        "order": 5,
+        "width": "7",
+        "height": "2",
+        "name": "",
+        "label": "Status da Rede Elétrica:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": "18",
+        "color": "#000000",
+        "x": 2170,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "86fa82f4b880bfb6",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "grupo_sife",
+        "order": 4,
+        "width": "7",
+        "height": "1",
+        "name": "",
+        "label": "Tensão da Fonte (V_Fonte):",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 2180,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "c39513db9768d30b",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "grupo_sife",
+        "order": 3,
+        "width": "7",
+        "height": "1",
+        "name": "",
+        "label": "Tensão da Bateria (V_Bat):",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 2180,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "b23169d6c5a360dc",
+        "type": "mongodb out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52926e791328d2b8",
+        "mongodb": "f351403e4234def3",
+        "name": "Gravador MongoDB",
+        "collection": "",
+        "payonly": true,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 1420,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "4b4ac2ed412358c7",
+        "type": "delay",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52926e791328d2b8",
+        "name": "Espera Gravação",
+        "pauseType": "delay",
+        "timeout": "100",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "outputs": 1,
+        "x": 1240,
+        "y": 200,
+        "wires": [
+            [
+                "f8ae2587a2ed9807"
+            ]
+        ]
+    },
+    {
+        "id": "f8ae2587a2ed9807",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52926e791328d2b8",
+        "name": "Monta Query",
+        "func": "msg.operation = \"find\";\nmsg.payload = {};\nmsg.sort = { timestamp: -1 };\nmsg.limit = 50;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1435,
+        "y": 200,
+        "wires": [
+            [
+                "77a07b60a2a79d54"
+            ]
+        ]
+    },
+    {
+        "id": "77a07b60a2a79d54",
+        "type": "mongodb in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52926e791328d2b8",
+        "mongodb": "f351403e4234def3",
+        "name": "Leitor MongoDB",
+        "collection": "",
+        "operation": "find",
+        "x": 1605,
+        "y": 200,
+        "wires": [
+            [
+                "ab87aebdd95977e3"
+            ]
+        ]
+    },
+    {
+        "id": "ab87aebdd95977e3",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52926e791328d2b8",
+        "name": "Distribuidor DB -> Dash",
+        "func": "if (!msg.payload || !Array.isArray(msg.payload) || msg.payload.length === 0) return null;\n\nconst col = msg.collection;\nconst docs = msg.payload;\nconst maisRecente = docs[0].dados || {};\nlet msgs = new Array(21).fill(null);\n\n\nconst paraGrafico = (extrator, topico) => {\n    // Extrai o valor exclusivamente do documento mais recente (docs[0])\n    let val = extrator(maisRecente);\n\n    if (val !== undefined && val !== null) {\n        // Retorna um único objeto de mensagem, sem arrays\n        return {\n            payload: val,\n            topic: topico,\n            timestamp: new Date(docs[0].timestamp).getTime()\n        };\n    }\n\n    return null;\n};\n\nif (col === \"Parametros_Pressao_Tensao\") {\n    msgs[0] = { payload: maisRecente.tensao };\n    msgs[1] = paraGrafico(d => d.tensao, \"Pressão\");\n}\nelse if (col === \"Parametros_Temperatura\") {\n    msgs[2] = { payload: maisRecente.temperatura };\n    msgs[3] = paraGrafico(d => d.temperatura, \"Temperatura\");\n}\nelse if (col && col.startsWith(\"accelfft_\") && !col.includes(\"spectrum\")) {\n    const parts = col.split('_');\n    if (parts.length === 3) {\n        const eixo = parts[1];\n        const sensor = parts[2];\n        const freq = maisRecente[\"frequencia_pico_\" + eixo];\n        if (freq !== undefined) {\n            let v = { payload: freq.toFixed(2) + \" Hz\" };\n            if (sensor === \"s1\" && eixo === \"x\") msgs[4] = v;\n            if (sensor === \"s1\" && eixo === \"y\") msgs[5] = v;\n            if (sensor === \"s1\" && eixo === \"z\") msgs[6] = v;\n            if (sensor === \"s2\" && eixo === \"x\") msgs[7] = v;\n            if (sensor === \"s2\" && eixo === \"y\") msgs[8] = v;\n            if (sensor === \"s2\" && eixo === \"z\") msgs[9] = v;\n            if (sensor === \"s3\" && eixo === \"x\") msgs[10] = v;\n            if (sensor === \"s3\" && eixo === \"y\") msgs[11] = v;\n            if (sensor === \"s3\" && eixo === \"z\") msgs[12] = v;\n        }\n    }\n}\nelse if (col === \"Historico_Energia_SIFE\") {\n    let soc = Number(maisRecente.SoC).toFixed(2);\n    msgs[13] = { payload: soc };\n    msgs[14] = paraGrafico(d => Number(d.SoC), \"Carga(SoC)\");\n    \n    msgs[15] = paraGrafico(d => Number(d.V_Bat), \"Tensão (V)\");\n    msgs[16] = paraGrafico(d => Number(d.I_Bat), \"Corrente (mA)\");\n    \n    msgs[17] = { payload: Number(maisRecente.V_Bat).toFixed(2) + ' V' };\n    msgs[18] = { payload: Number(maisRecente.V_Fonte).toFixed(2) + ' V' };\n    msgs[19] = { payload: maisRecente.RedeAC === 1 ? '🟢 CONECTADO (AC)' : '🔴 BATERIA (Queda)' };\n    \n    let msg_ina = \"✅ Sensores OK\";\n    if (maisRecente.INA1_Err && maisRecente.INA2_Err) msg_ina = \"⚠️ Falha Crítica: Ambos INAs OFF!\";\n    else if (maisRecente.INA1_Err) msg_ina = \"⚠️ Falha: INA Bateria (S1) OFF!\";\n    else if (maisRecente.INA2_Err) msg_ina = \"⚠️ Falha: INA Fonte (S2) OFF!\";\n    msgs[20] = { payload: msg_ina };\n}\n\nreturn msgs;",
+        "outputs": 21,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1810,
+        "y": 200,
+        "wires": [
+            [
+                "4045123d4728d62a"
+            ],
+            [],
+            [
+                "4907dd5efda0f588"
+            ],
+            [],
+            [
+                "ec331a12f9cc3f80"
+            ],
+            [
+                "22397033d1944f4a"
+            ],
+            [
+                "1288be3d2ebd47b6"
+            ],
+            [
+                "9b949ec5a41d31ef"
+            ],
+            [
+                "b1619985e8105d76"
+            ],
+            [
+                "1815a5228376226a"
+            ],
+            [
+                "155395a3b784f28e"
+            ],
+            [
+                "9dcf95ae1318d0ac"
+            ],
+            [
+                "e5067822065bfc03"
+            ],
+            [
+                "da93ea497fe71773"
+            ],
+            [
+                "d21ce6d0cdd7e444"
+            ],
+            [
+                "292cfba20751f8bd"
+            ],
+            [
+                "0fa479a0b0359dfd"
+            ],
+            [
+                "c39513db9768d30b"
+            ],
+            [
+                "86fa82f4b880bfb6"
+            ],
+            [
+                "250dc3a939f748fe"
+            ],
+            [
+                "d91df3193fd4f54d"
+            ]
+        ]
+    },
+    {
+        "id": "d91df3193fd4f54d",
+        "type": "ui-text",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "grupo_sife",
+        "order": 1,
+        "width": "7",
+        "height": "1",
+        "name": "Status INA",
+        "label": "Status do Hardware: ",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 2130,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "19317f20c0940a14",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Prepara Energia Mongo",
+        "func": "if(msg.payload.tipo === \"REALTIME\" || msg.payload.V_Bat !== undefined) {\n    var novaMsg = {\n        measurement: \"Historico_Energia_SIFE\",\n        payload: msg.payload\n    };\n    return novaMsg;\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1470,
+        "y": 540,
+        "wires": [
+            [
+                "c028fa5582df82f1"
+            ]
+        ]
+    },
+    {
+        "id": "d21ce6d0cdd7e444",
+        "type": "ui-chart",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "grupo_sife",
+        "name": "Carga da bateria",
+        "label": "Carga da bateria",
+        "order": 8,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "{HH}:{mm}",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "100",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": "36",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1000",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 2140,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "292cfba20751f8bd",
+        "type": "ui-chart",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "grupo_sife",
+        "name": "Tensão da Bateria",
+        "label": "Tensão da Bateria",
+        "order": 6,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Tensão (V)",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": "10",
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": "2",
+        "showLegend": true,
+        "removeOlder": "36",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1000",
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#ffbb78",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": "6",
+        "className": "",
+        "interpolation": "linear",
+        "x": 2150,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0fa479a0b0359dfd",
+        "type": "ui-chart",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "group": "grupo_sife",
+        "name": "Corrente da Bateria",
+        "label": "Corrente da Bateria",
+        "order": 7,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Corrente (mA)",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": "10",
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": "2",
+        "showLegend": true,
+        "removeOlder": "36",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1000",
+        "colors": [
+            "#ff7f0e",
+            "#aec7e8",
+            "#1f77b4",
+            "#ffbb78",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": "6",
+        "className": "",
+        "interpolation": "linear",
+        "x": 2150,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "13a7ebd1416fc8c7",
+        "type": "lite-aes-gcm-decrypt",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Criptografia SIFE",
+        "key": "6cc18720aed8cb60ceed9fb679495144",
+        "ivLen": "12",
+        "tagLen": "16",
+        "x": 470,
+        "y": 660,
+        "wires": [
+            [
+                "197532fe1460c080"
+            ]
+        ]
+    },
+    {
+        "id": "8773d646b8234983",
+        "type": "lite-aes-gcm-decrypt",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Criptografia Temperatura",
+        "key": "6cc18720aed8cb60ceed9fb679495144",
+        "ivLen": "12",
+        "tagLen": "16",
+        "x": 490,
+        "y": 180,
+        "wires": [
+            [
+                "d91c3c160a08bf9a",
+                "1ef316f758e853b0"
+            ]
+        ]
+    },
+    {
+        "id": "9559b5f2c3174c8f",
+        "type": "lite-aes-gcm-decrypt",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Criptografia Pressão",
+        "key": "6cc18720aed8cb60ceed9fb679495144",
+        "ivLen": "12",
+        "tagLen": "16",
+        "x": 500,
+        "y": 120,
+        "wires": [
+            [
+                "6f63f9e1d5254bdb",
+                "642f6a6d8bcea561"
+            ]
+        ]
+    },
+    {
+        "id": "642f6a6d8bcea561",
+        "type": "debug",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Pressão Criptografia",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "1ef316f758e853b0",
+        "type": "debug",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Temp Criptografia",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "7099c7775178fb43",
+        "type": "debug",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Vibra S1 Criptografia",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "67447e4f9e14d20c",
+        "type": "debug",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Vibra S2 Criptografia",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "88ba3c57fd920329",
+        "type": "debug",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Vibra S3 Criptografia",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "b2d24bd64ee34074",
+        "type": "lite-aes-gcm-decrypt",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Criptografia Vibra1",
+        "key": "6cc18720aed8cb60ceed9fb679495144",
+        "ivLen": "12",
+        "tagLen": "16",
+        "x": 490,
+        "y": 300,
+        "wires": [
+            [
+                "c7c1583a903f8e0c"
+            ]
+        ]
+    },
+    {
+        "id": "2bff3feffab4b3d5",
+        "type": "lite-aes-gcm-decrypt",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Criptografia Vibra2",
+        "key": "6cc18720aed8cb60ceed9fb679495144",
+        "ivLen": "12",
+        "tagLen": "16",
+        "x": 490,
+        "y": 420,
+        "wires": [
+            [
+                "d3de87578ec3468e"
+            ]
+        ]
+    },
+    {
+        "id": "334b7e7dcfcbd54b",
+        "type": "lite-aes-gcm-decrypt",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Criptografia Vibra3",
+        "key": "6cc18720aed8cb60ceed9fb679495144",
+        "ivLen": "12",
+        "tagLen": "16",
+        "x": 490,
+        "y": 560,
+        "wires": [
+            [
+                "ee1d5bb6dd53e3e5"
+            ]
+        ]
+    },
+    {
+        "id": "6f63f9e1d5254bdb",
+        "type": "json",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 690,
+        "y": 120,
+        "wires": [
+            [
+                "5c3699a6866a8af0"
+            ]
+        ]
+    },
+    {
+        "id": "d91c3c160a08bf9a",
+        "type": "json",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 690,
+        "y": 180,
+        "wires": [
+            [
+                "6d2baa355914b1b2"
+            ]
+        ]
+    },
+    {
+        "id": "c7c1583a903f8e0c",
+        "type": "json",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 300,
+        "wires": [
+            [
+                "7099c7775178fb43",
+                "9379ea8871274831"
+            ]
+        ]
+    },
+    {
+        "id": "d3de87578ec3468e",
+        "type": "json",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 420,
+        "wires": [
+            [
+                "67447e4f9e14d20c",
+                "5e859672e5128982"
+            ]
+        ]
+    },
+    {
+        "id": "197532fe1460c080",
+        "type": "json",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 660,
+        "wires": [
+            [
+                "dfc7abc08fe8563a",
+                "4d6c16bb5acf5d58"
+            ]
+        ]
+    },
+    {
+        "id": "ee1d5bb6dd53e3e5",
+        "type": "json",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 560,
+        "wires": [
+            [
+                "88ba3c57fd920329",
+                "96761621c4f85235"
+            ]
+        ]
+    },
+    {
+        "id": "87489391408349d9",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Formata Energia Backup",
+        "func": "if(msg.payload) {\n    msg.payload.tipo = \"ENERGIA_BACKUP\"; \n    var novaMsg = {\n        measurement: \"Historico_Energia_SIFE\",\n        payload: msg.payload\n    };\n    return novaMsg;\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1470,
+        "y": 620,
+        "wires": [
+            [
+                "c028fa5582df82f1"
+            ]
+        ]
+    },
+    {
+        "id": "e4df9147d4e1921d",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Formata Backup S1",
+        "func": "if (!msg.payload) return null;\n\nmsg.measurement = \"Vibracao_S1\";\n\nmsg.payload = {\n    origem: \"BACKUP_OFFLINE\",\n    sensor: msg.payload.s,\n    n_amostras: msg.payload.n,\n    x: msg.payload.x,\n    y: msg.payload.y,\n    z: msg.payload.z\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1400,
+        "y": 760,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ]
+        ]
+    },
+    {
+        "id": "bef9dbe34b63d8cd",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Formata Backup S2",
+        "func": "if (!msg.payload) return null;\n\nmsg.measurement = \"Vibracao_S2\";\n\nmsg.payload = {\n    origem: \"BACKUP_OFFLINE\",\n    sensor: msg.payload.s,\n    n_amostras: msg.payload.n,\n    x: msg.payload.x,\n    y: msg.payload.y,\n    z: msg.payload.z\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1410,
+        "y": 900,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ]
+        ]
+    },
+    {
+        "id": "50a473514b786f20",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Formata Backup S3",
+        "func": "if (!msg.payload) return null;\n\nmsg.measurement = \"Vibracao_S3\";\n\nmsg.payload = {\n    origem: \"BACKUP_OFFLINE\",\n    sensor: msg.payload.s,\n    n_amostras: msg.payload.n,\n    x: msg.payload.x,\n    y: msg.payload.y,\n    z: msg.payload.z\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1410,
+        "y": 1060,
+        "wires": [
+            [
+                "d6ba75dfdf99d8b2"
+            ]
+        ]
+    },
+    {
+        "id": "a5d3235271b96c85",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "name": "Gráfico S1 out",
+        "links": [
+            "2c65d36feec74d7b"
+        ],
+        "x": 2045,
+        "y": 840,
+        "wires": [
+            [
+                "bce9cc9d82798804"
+            ]
+        ]
+    },
+    {
+        "id": "196e259d81a2da2b",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "name": "Gráfico S2 out",
+        "links": [
+            "a68a252f96534d59"
+        ],
+        "x": 2045,
+        "y": 880,
+        "wires": [
+            [
+                "347cfc398c965c40"
+            ]
+        ]
+    },
+    {
+        "id": "2e6e7c21427119c6",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "e1a013899e3b1bfc",
+        "name": "Gráfico S3 out",
+        "links": [
+            "455591a5654391ce"
+        ],
+        "x": 2045,
+        "y": 920,
+        "wires": [
+            [
+                "7859def0a453e868"
+            ]
+        ]
+    },
+    {
+        "id": "2c65d36feec74d7b",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Gráfico S1 in",
+        "mode": "link",
+        "links": [
+            "a5d3235271b96c85"
+        ],
+        "x": 1775,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "a68a252f96534d59",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Gráfico S2 in",
+        "mode": "link",
+        "links": [
+            "196e259d81a2da2b"
+        ],
+        "x": 1765,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "455591a5654391ce",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Gráfico S3 in",
+        "mode": "link",
+        "links": [
+            "2e6e7c21427119c6"
+        ],
+        "x": 1765,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "c028fa5582df82f1",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Banco de dados in",
+        "mode": "link",
+        "links": [
+            "02d7aa3e47d1a60c"
+        ],
+        "x": 1715,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "5c3699a6866a8af0",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Processamento de pressão in",
+        "mode": "link",
+        "links": [
+            "7408dbabbf20b017"
+        ],
+        "x": 825,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "6d2baa355914b1b2",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Processamento de Temperatura in",
+        "mode": "link",
+        "links": [
+            "941bfea3fbbb0ab2"
+        ],
+        "x": 825,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "9379ea8871274831",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Processamento S1 in",
+        "mode": "link",
+        "links": [
+            "99663bc991a25657"
+        ],
+        "x": 765,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5e859672e5128982",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Processamento S2 in",
+        "mode": "link",
+        "links": [
+            "a9fe790eaca77700"
+        ],
+        "x": 755,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "96761621c4f85235",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Processamento S3 in",
+        "mode": "link",
+        "links": [
+            "61caba29dbaae9be"
+        ],
+        "x": 755,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "dfc7abc08fe8563a",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Processamento Energia in",
+        "mode": "link",
+        "links": [
+            "65d3d67fd21bba39"
+        ],
+        "x": 755,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "7408dbabbf20b017",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Processamento de pressão",
+        "links": [
+            "5c3699a6866a8af0",
+            "0262990b91a5988b"
+        ],
+        "x": 1035,
+        "y": 440,
+        "wires": [
+            [
+                "293a400a640f8562"
+            ]
+        ]
+    },
+    {
+        "id": "941bfea3fbbb0ab2",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Processamento de temperatura",
+        "links": [
+            "6d2baa355914b1b2",
+            "1e32c28403160f93"
+        ],
+        "x": 1035,
+        "y": 500,
+        "wires": [
+            [
+                "b95c671f6b8137bf"
+            ]
+        ]
+    },
+    {
+        "id": "99663bc991a25657",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Processamento S1 out",
+        "links": [
+            "1a30e5257490a3f2",
+            "9379ea8871274831"
+        ],
+        "x": 1065,
+        "y": 720,
+        "wires": [
+            [
+                "94ad3f98ccf96f32"
+            ]
+        ]
+    },
+    {
+        "id": "a9fe790eaca77700",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Processamento S2 out",
+        "links": [
+            "08f9f7f788aba478",
+            "5e859672e5128982"
+        ],
+        "x": 1065,
+        "y": 860,
+        "wires": [
+            [
+                "96896d2fd65da0ea"
+            ]
+        ]
+    },
+    {
+        "id": "61caba29dbaae9be",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "52ae88cdfcacd16d",
+        "name": "Processamento S3 out",
+        "links": [
+            "2de8316bebbd9884",
+            "96761621c4f85235"
+        ],
+        "x": 1085,
+        "y": 1020,
+        "wires": [
+            [
+                "d4696a14f34e3762"
+            ]
+        ]
+    },
+    {
+        "id": "65d3d67fd21bba39",
+        "type": "link in",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d235c590a36caf76",
+        "name": "Processamento de energia out",
+        "links": [
+            "dfc7abc08fe8563a",
+            "4bfc6617d4631a61"
+        ],
+        "x": 1035,
+        "y": 560,
+        "wires": [
+            [
+                "87cef21aca1aa9f0"
+            ]
+        ]
+    },
+    {
+        "id": "4d6c16bb5acf5d58",
+        "type": "debug",
+        "z": "b1ee4db08bf0ea09",
+        "g": "d2a9cc82619d0aa3",
+        "name": "Vibra Energia",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "inject_pressao_direto",
+        "type": "inject",
+        "z": "b1ee4db08bf0ea09",
+        "d": true,
+        "g": "grupo_testes",
+        "name": "Simula Pressão",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "sife_felipe/pressao/dados",
+        "payload": "{\"val\": 1.45, \"tipo\": \"REALTIME\"}",
+        "payloadType": "json",
+        "x": 430,
+        "y": 840,
+        "wires": [
+            [
+                "0262990b91a5988b"
+            ]
+        ]
+    },
+    {
+        "id": "inject_temp_direto",
+        "type": "inject",
+        "z": "b1ee4db08bf0ea09",
+        "d": true,
+        "g": "grupo_testes",
+        "name": "Simula Temperatura",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "sife_felipe/temperatura/dados",
+        "payload": "{\"val\": 38.6, \"tipo\": \"REALTIME\"}",
+        "payloadType": "json",
+        "x": 440,
+        "y": 880,
+        "wires": [
+            [
+                "1e32c28403160f93"
+            ]
+        ]
+    },
+    {
+        "id": "inject_energia_direto",
+        "type": "inject",
+        "z": "b1ee4db08bf0ea09",
+        "d": true,
+        "g": "grupo_testes",
+        "name": "Simula Energia",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "sife_felipe/energia/dados",
+        "payload": "{\"tipo\": \"REALTIME\", \"SoC\": 82.5, \"V_Bat\": 12.1, \"I_Bat\": -1250, \"V_Fonte\": 0, \"RedeAC\": 0, \"INA1_Err\": 0, \"INA2_Err\": 0}",
+        "payloadType": "json",
+        "x": 420,
+        "y": 920,
+        "wires": [
+            [
+                "4bfc6617d4631a61"
+            ]
+        ]
+    },
+    {
+        "id": "inject_vibra_direto",
+        "type": "inject",
+        "z": "b1ee4db08bf0ea09",
+        "d": true,
+        "g": "grupo_testes",
+        "name": "Dispara Vibração S1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 440,
+        "y": 980,
+        "wires": [
+            [
+                "func_gerador_vibra_direto"
+            ]
+        ]
+    },
+    {
+        "id": "func_gerador_vibra_direto",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Gerador de 8 Pacotes (60Hz)",
+        "func": "var msgs = [];\nfor(var p=1; p<=8; p++){\n    var arrX = [], arrY = [], arrZ = [];\n    for(var i=0; i<64; i++){\n        var t = ((p-1)*64 + i) / 800;\n        arrX.push(2 * Math.sin(2 * Math.PI * 60 * t) + (Math.random()*0.2));\n        arrY.push(Math.random() - 0.5);\n        arrZ.push(Math.random() - 0.5);\n    }\n    msgs.push({\n        topic: \"sife_felipe/vibracao/sensor1/dados\",\n        payload: { p: p, s: 1, n: 512, x: arrX, y: arrY, z: arrZ }\n    });\n}\nreturn [msgs];",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 980,
+        "wires": [
+            [
+                "1a30e5257490a3f2"
+            ]
+        ]
+    },
+    {
+        "id": "0262990b91a5988b",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Processamento de pressão in",
+        "mode": "link",
+        "links": [
+            "7408dbabbf20b017"
+        ],
+        "x": 565,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "1e32c28403160f93",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Processamento de Temperatura in",
+        "mode": "link",
+        "links": [
+            "941bfea3fbbb0ab2"
+        ],
+        "x": 585,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "1a30e5257490a3f2",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Processamento S1 in",
+        "mode": "link",
+        "links": [
+            "99663bc991a25657"
+        ],
+        "x": 845,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "4bfc6617d4631a61",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Processamento Energia in",
+        "mode": "link",
+        "links": [
+            "65d3d67fd21bba39"
+        ],
+        "x": 585,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "432058fa020fd3c6",
+        "type": "inject",
+        "z": "b1ee4db08bf0ea09",
+        "d": true,
+        "g": "grupo_testes",
+        "name": "Dispara Vibração S2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 440,
+        "y": 1020,
+        "wires": [
+            [
+                "4a37b734d6cd938e"
+            ]
+        ]
+    },
+    {
+        "id": "4a37b734d6cd938e",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Gerador de 8 Pacotes (60Hz)",
+        "func": "var msgs = [];\nfor(var p=1; p<=8; p++){\n    var arrX = [], arrY = [], arrZ = [];\n    for(var i=0; i<64; i++){\n        var t = ((p-1)*64 + i) / 800;\n        arrX.push(2 * Math.sin(2 * Math.PI * 60 * t) + (Math.random()*0.2));\n        arrY.push(Math.random() - 0.5);\n        arrZ.push(Math.random() - 0.5);\n    }\n    msgs.push({\n        topic: \"sife_felipe/vibracao/sensor2/dados\",\n        payload: { p: p, s: 1, n: 512, x: arrX, y: arrY, z: arrZ }\n    });\n}\nreturn [msgs];",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 1020,
+        "wires": [
+            [
+                "08f9f7f788aba478"
+            ]
+        ]
+    },
+    {
+        "id": "10ccc5da1ec5ccf1",
+        "type": "inject",
+        "z": "b1ee4db08bf0ea09",
+        "d": true,
+        "g": "grupo_testes",
+        "name": "Dispara Vibração S3",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 440,
+        "y": 1060,
+        "wires": [
+            [
+                "440136e60cb87283"
+            ]
+        ]
+    },
+    {
+        "id": "440136e60cb87283",
+        "type": "function",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Gerador de 8 Pacotes (60Hz)",
+        "func": "var msgs = [];\nfor(var p=1; p<=8; p++){\n    var arrX = [], arrY = [], arrZ = [];\n    for(var i=0; i<64; i++){\n        var t = ((p-1)*64 + i) / 800;\n        arrX.push(2 * Math.sin(2 * Math.PI * 60 * t) + (Math.random()*0.2));\n        arrY.push(Math.random() - 0.5);\n        arrZ.push(Math.random() - 0.5);\n    }\n    msgs.push({\n        topic: \"sife_felipe/vibracao/sensor3/dados\",\n        payload: { p: p, s: 1, n: 512, x: arrX, y: arrY, z: arrZ }\n    });\n}\nreturn [msgs];",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 1060,
+        "wires": [
+            [
+                "2de8316bebbd9884"
+            ]
+        ]
+    },
+    {
+        "id": "08f9f7f788aba478",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Processamento S2 in",
+        "mode": "link",
+        "links": [
+            "a9fe790eaca77700"
+        ],
+        "x": 845,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "2de8316bebbd9884",
+        "type": "link out",
+        "z": "b1ee4db08bf0ea09",
+        "g": "grupo_testes",
+        "name": "Processamento Energia in",
+        "mode": "link",
+        "links": [
+            "61caba29dbaae9be"
+        ],
+        "x": 845,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "9ae293967e57c171",
+        "type": "mqtt-broker",
+        "name": "Broker Publico",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": "50",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "aaf3169817ec4094",
+        "type": "ui-group",
+        "name": "Sensoriamento de temperatura e pressão",
+        "page": "0d89f93811cef531",
+        "width": "12",
+        "height": "10",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "3b61de3803f2d76b",
+        "type": "ui-group",
+        "name": "Vibração - Acelerômetro 1",
+        "page": "0d89f93811cef531",
+        "width": "12",
+        "height": "8",
+        "order": 6,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "d7c38aa5eef99eea",
+        "type": "ui-group",
+        "name": "Picos FFT - Acelerômetro 1",
+        "page": "0d89f93811cef531",
+        "width": "6",
+        "height": "4",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "a080f4c97c5f2ce7",
+        "type": "ui-group",
+        "name": "Vibração - Acelerômetro 2",
+        "page": "0d89f93811cef531",
+        "width": "12",
+        "height": "4",
+        "order": 7,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "84e6070ea6a132bf",
+        "type": "ui-group",
+        "name": "Picos FFT - Acelerômetro 2",
+        "page": "0d89f93811cef531",
+        "width": "6",
+        "height": "0",
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "3cb72d4a56edc245",
+        "type": "ui-group",
+        "name": "Vibração - Acelerômetro 3",
+        "page": "0d89f93811cef531",
+        "width": "12",
+        "height": "8",
+        "order": 8,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "fb7f9a135248ac64",
+        "type": "ui-group",
+        "name": "Picos FFT - Acelerômetro 3",
+        "page": "0d89f93811cef531",
+        "width": "12",
+        "height": "1",
+        "order": 5,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "grupo_sife",
+        "type": "ui-group",
+        "name": "Gerenciamento de Energia (SIFE)",
+        "page": "0d89f93811cef531",
+        "width": "12",
+        "height": "0",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "f351403e4234def3",
+        "type": "mongodb",
+        "hostname": "127.0.0.1",
+        "connectOptions": "",
+        "port": "27017",
+        "db": "banco_lite",
+        "name": "MongoDB LITE"
+    },
+    {
+        "id": "0d89f93811cef531",
+        "type": "ui-page",
+        "name": "Painel de Sensores LITE",
+        "ui": "ui_base_config",
+        "path": "/sensores",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "ui_theme_config",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "ui_base_config",
+        "type": "ui-base",
+        "name": "Base LITE",
+        "path": "/dashboard",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false
+    },
+    {
+        "id": "ui_theme_config",
+        "type": "ui-theme",
+        "name": "Tema Industrial",
+        "colors": {
+            "surface": "#bce8eb",
+            "primary": "#bce8eb",
+            "bgPage": "#ecece4",
+            "groupBg": "#f7f6e5",
+            "groupOutline": "#36064d"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "1b0e40db20e32985",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flowfuse/node-red-dashboard": "1.30.2",
+            "node-red-node-mongodb": "0.2.5",
+            "node-red-contrib-esp32encrypt": "1.0.2"
+        }
+    }
+]
