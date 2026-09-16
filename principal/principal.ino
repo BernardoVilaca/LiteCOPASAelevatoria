@@ -8,11 +8,7 @@
 #include "SIFE_LIB.h"
 #include "backup.h"
 
-
-//#define WDT_TIMEOUT_MS  2 * MINUTES_FACTOR    // Dois minutos
 #define WDT_TIMEOUT_MS  120000 // 2 minutos
-
-TwoWire I2C_2 = TwoWire(1);   // Destinado aos sensores
 
 // Cria os objetos dos acelerômetros ******************************************
 Adafruit_ADXL345_Unified accel1(12345); 
@@ -37,18 +33,15 @@ unsigned long timer_ciclo = 0;
 bool primeiro_ciclo = true;
 unsigned long timer_sife = 0;
 
-
 /******************************************************************************************************************/
 // Faz a leitura da temperatura.
-float lerTemperaturaSPI() 
-{
+float lerTemperaturaSPI() {
   uint16_t dados;
-  digitalWrite(thermoCS, LOW);
   SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
+  digitalWrite(thermoCS, LOW);
   dados = SPI.transfer16(0x00);
-  SPI.endTransaction();
   digitalWrite(thermoCS, HIGH);
- 
+  SPI.endTransaction();
   if (dados & 0x4) return -1.0; 
   return (dados >> 3) * 0.25;
 }
@@ -58,11 +51,14 @@ float lerTemperaturaSPI()
 float lerTemperaturaFiltrada() {
   const int amostras = 5;
   float leituras[amostras];
+  
   for (int i = 0; i < amostras; i++) {
     esp_task_wdt_reset(); 
     leituras[i] = lerTemperaturaSPI();
-    delay(5);
+    waitingTime(250); 
   }
+  
+  // Ordenação das amostras
   for (int i = 0; i < amostras - 1; i++) {
     for (int j = i + 1; j < amostras; j++) {
       esp_task_wdt_reset();
@@ -77,27 +73,32 @@ float lerTemperaturaFiltrada() {
   return leituras[amostras / 2];
 }
 
-/****************************************************************************************************/
-// Seleciona qual barramento de I2C vai ser usado. 
-void selectBus(TwoWire *bus) {
-  if (bus == &I2C_2) { 
-    Wire.begin(25, 26);
-    Wire.setClock(10000);
-  } else { 
-    Wire.begin(21, 22); 
-    Wire.setClock(2000);
+/***************************************************************************************************************/
+void clearI2C(int sda, int scl) {
+  pinMode(sda, INPUT_PULLUP);
+  pinMode(scl, OUTPUT);
+  
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(scl, LOW);
+    waitingTime(1);
+    digitalWrite(scl, HIGH);
+    waitingTime(1);
   }
+  pinMode(sda, OUTPUT);
+  digitalWrite(sda, LOW);
+  waitingTime(1);
+  digitalWrite(scl, HIGH);
+  waitingTime(1);
+  digitalWrite(sda, HIGH);
 }
 
 /***************************************************************************************************************/
-void collectSensorSamples(Adafruit_ADXL345_Unified &accel, AmostraAcelerometro *buffer, TwoWire *bus) {
+void collectSensorSamples(Adafruit_ADXL345_Unified &accel, AmostraAcelerometro *buffer) {
   for (int i = 0; i < NUM_AMOSTRAS; ++i) 
   {
     esp_task_wdt_reset();
     sensors_event_t e;
-    if (bus) selectBus(bus);
     accel.getEvent(&e);
-    if (bus) selectBus(nullptr);
     
     buffer[i].x = (int16_t)(e.acceleration.x * 100);
     buffer[i].y = (int16_t)(e.acceleration.y * 100);
@@ -114,18 +115,7 @@ void processarLeituraEnvio()
   Serial.println("\n==================================================");
   Serial.println("[PASSO 1] Lendo Sensores de Planta (Vibracao/Pressao/Temperatura)...");
 
-  // Cria variáveis de controle
   String JsonTemperatura, JsonPressao, JsonSife;
-
-  String jsonsVibracao[NUM_AMOSTRAS/CHUNK_SIZE];
-  
-  // inicialização dos sensores
-  accel1.begin(0x53);
-  accel2.begin(0x1D);
-  accel3.begin(0x53);
-  selectBus(&I2C_2);
-  selectBus(nullptr);
-  ads.begin();
 
   // Obtém dados de pressão
   int16_t adc = ads.readADC_SingleEnded(0);
@@ -138,16 +128,17 @@ void processarLeituraEnvio()
   if (medidaTemperaturaAtual < 0) medidaTemperaturaAtual = 0.0;
   JsonTemperatura = getMedida(medidaTemperaturaAtual, "REALTIME");
  
-  // Coleta os dados dos sensores
-  collectSensorSamples(accel1, bufferSensor1, nullptr);
-  collectSensorSamples(accel2, bufferSensor2, nullptr);
-  collectSensorSamples(accel3, bufferSensor3, &I2C_2);
+  collectSensorSamples(accel1, bufferSensor1);
+  collectSensorSamples(accel2, bufferSensor2);
 
+  Wire.begin(25, 26);
+  collectSensorSamples(accel3, bufferSensor3);
+
+  Wire.begin(21, 22);
 
   // Obtém medidas do SIFE 
   JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2, "REALTIME");
 
-  // evitar bugs
   jsonSmall.clear();
   jsonLarge.clear();
 
@@ -196,7 +187,7 @@ void processarLeituraEnvio()
       bufferSensor3
     );
     desconectarRede();
-        return;
+    return;
   }
 
   // ----------------------------------
@@ -219,6 +210,7 @@ void processarLeituraEnvio()
     Serial.println("[TEMPERATURA] Não foi publicado corretamente.");
   }
   waitingTime(300);
+
   // Publicação dos dados dos acelerômetros 
   Serial.println("[PASSO 4] Enviando dados dos Acelerômetros...");
 
@@ -242,41 +234,40 @@ void processarLeituraEnvio()
 /******************************************************************************************************************/
 void setup() 
 {
-  // Configurações de pinagem Termopar
+  Serial.begin(BAUD_RATE);
+
+clearI2C(21, 22); 
+  clearI2C(25, 26); 
+
+  Wire.begin(21, 22); 
+  Wire.setClock(100000); 
+  Wire.setTimeOut(150); 
+
+  accel1.begin(0x53);
+  accel2.begin(0x1D);
+
+  Wire.begin(25, 26);
+  accel3.begin(0x1D);
+
+  Wire.begin(21, 22);
+  delay(100);
+
+  Backup_Begin();
+  SIFE_Setup();
+
   pinMode(thermoCS, OUTPUT);
   digitalWrite(thermoCS, HIGH);
   SPI.begin(thermoSCK, thermoSO, -1, thermoCS);     
 
-  // Inicialização da Serial
-  Serial.begin(BAUD_RATE);
+  ads.begin();
 
-  // Setup do sistema de backup
-  Backup_Begin();
-
-  // Setup Sistema de Fornecimento de Energia (SIFE)
-  SIFE_Setup();
-
-  // Setup Modem GSM
   Serial1.begin(BAUD_RATE, SERIAL_8N1, MODEM_RX, MODEM_TX);
-  pinMode(MODEM_PWRKEY, OUTPUT);      // Configura Pinagem do modem GSM
-  digitalWrite(MODEM_PWRKEY, HIGH);    // Garante estado conhecido
+  pinMode(MODEM_PWRKEY, OUTPUT);
+  digitalWrite(MODEM_PWRKEY, HIGH);
 
-  // Configura pino DTR (sleep/wake do modem)
-  // DTR HIGH garante que a UART do modem está ativa antes de qualquer comando AT
   pinMode(MODEM_SLEEP, OUTPUT);
   digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
 
-  
-  // Inicialização barramento I2C
-  Wire.begin(21, 22); 
-  Wire.setClock(2000); 
-  Wire.setTimeOut(150); 
-  I2C_2.begin(25, 26); 
-  I2C_2.setClock(10000);
-  I2C_2.setTimeOut(150); 
-  delay(100); 
-
-  // Configuração Watchdog
   esp_task_wdt_config_t cfg = { 
     .timeout_ms = WDT_TIMEOUT_MS, 
     .idle_core_mask = (1 << 0) | (1 << 1), 
@@ -303,7 +294,6 @@ void loop()
         iniciarDeepSleep();
     }
   }
-
   else if (!primeiro_ciclo && (millis() - timer_ciclo >= (TEMPO_ENVIO_AC * 1000UL))) {
     processarLeituraEnvio();
     timer_ciclo = millis(); 
