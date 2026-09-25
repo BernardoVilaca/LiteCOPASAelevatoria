@@ -14,8 +14,8 @@
 // ========================================================================================================
 // --- Mapeamento de Hardware ---
 // ========================================================================================================
-#define MOS_PIM 15             // Pino de controle do MOSFET (vai ligado em E, de enable)
-#define PWM_PIN 12             // Pino de saída do PWM (vai ligado em P, de PWM)
+#define MOS_PIM 14             // Pino de controle do MOSFET (vai ligado em E, de enable)
+#define PWM_PIN 27             // Pino de saída do PWM (vai ligado em P, de PWM)
 #define WAKEUP_PIN GPIO_NUM_34 // Pino que detecta o retorno da rede AC
 
 // Endereços I2C dos sensores INA219
