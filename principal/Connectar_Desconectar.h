@@ -19,9 +19,9 @@
 #include <driver/rtc_io.h>
 
 // GSM - GPRS LTE *********************************************************************************************
-const char apn[]      = "zap.vivo.com.br"; 
-const char gprsUser[] = "vivo";
-const char gprsPass[] = "vivo";
+const char apn[]      = "copasaiot.br"; 
+const char gprsUser[] = "";
+const char gprsPass[] = "";
 
 #define SerialAT Serial1 
 static TinyGsm modem(SerialAT);
@@ -31,16 +31,16 @@ static PubSubClient client(gsmClient);
 #define MODEM_RX        16  
 #define MODEM_TX        17  
 #define MODEM_PWRKEY    4
-#define MODEM_SLEEP     14         // Pino Sleep/DTR A7670 (controla UART sleep)
+#define MODEM_SLEEP     15         // Pino Sleep/DTR A7670 (controla UART sleep)
 #define DTR_SET_SLEEP   0           // DTR LOW  -> modem pode dormir (CSCLK ativo)
 #define DTR_SET_WAKE    1           // DTR HIGH -> acorda a UART do modem
 #define MINUTES_FACTOR  6000
 #define BAUD_RATE       115200
 // Broker MQTT *************************************************************************************************
-#define MQTT_SERVER "broker.hivemq.com" 
-const int MQTT_PORT = 1883; 
-
-
+#define MQTT_SERVER "192.168.55.100" 
+const int MQTT_PORT = 1884; 
+const char* MQTT_USER = "ufmg";
+const char* MQTT_PASSWORD = "Copasa,1";
 static char mqttMsgBuffer[BUFFER_MQTT_GSM];
 const int CHUNK_SIZE = 64;
 
@@ -269,7 +269,7 @@ bool conectarRedeEbroker()
     int mqttRetries = 0;
     while (mqttRetries < 3) {
         esp_task_wdt_reset();
-        if (client.connect(clientId.c_str())) {
+        if (client.connect(clientId.c_str(), MQTT_USER, MQTT_PASSWORD)) {
             Serial.println("  -> [REDE] SUCESSO! Link com o servidor estabelecido.");
             return true;
         } else {
