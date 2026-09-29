@@ -9,7 +9,6 @@
 #define BACKUP_INTERVALO_HORAS 6
 #define BACKUP_NUM_AMOSTRAS 64
 
-
 // Registro persistente com todas as medidas do ciclo (versao reduzida para RTC).
 struct BackupRecord {
 	float temperatura;
@@ -58,17 +57,17 @@ static void reduzirAmostras(AmostraAcelerometro *destino, const AmostraAcelerome
 	}
 }
 
-// Envia vibracao de backup em um unico pacote (amostras reduzidas).
+// Envia vibracao de backup em um unico pacote (amostras reduzidas e chaves unificadas).
 static bool enviarVibracaoBackup(int sensorId, const AmostraAcelerometro *buffer, const char *topic) {
 	jsonLarge.clear();
-	jsonLarge["tipo"] = "BACKUP";
+	jsonLarge["tipo"] = "contingencia";
 	jsonLarge["s"] = sensorId;
 	jsonLarge["p"] = 1;
 	jsonLarge["n"] = BACKUP_NUM_AMOSTRAS;
 
-	JsonArray dataX = jsonLarge.createNestedArray("x");
-	JsonArray dataY = jsonLarge.createNestedArray("y");
-	JsonArray dataZ = jsonLarge.createNestedArray("z");
+	JsonArray dataX = jsonLarge.createNestedArray("amostras_x");
+	JsonArray dataY = jsonLarge.createNestedArray("amostras_y");
+	JsonArray dataZ = jsonLarge.createNestedArray("amostras_z");
 
 	for (int i = 0; i < BACKUP_NUM_AMOSTRAS; i++) {
 		dataX.add(buffer[i].x);
@@ -188,7 +187,7 @@ void Backup_ArmazenarSeNecessario(
 	Serial.println("[BACKUP] Registro salvo na RTC. Posicao = " + String(index + 1) + "/" + String(BACKUP_MAX_REGISTROS));
 }
 
-// Envia os pendentes primeiro; se algum enviar, limpa o buffer todo.
+// Envia os pendentes com a marcação Unified Namespace para Backup
 void Backup_EnviarPendentes() {
 	if (conteudoBackup == 0) {
 		Serial.println("[BACKUP] Sem pendencias para envio.");
@@ -201,9 +200,9 @@ void Backup_EnviarPendentes() {
 		bool sucesso = true;
 		BackupRecord &record = backupRegistros[i];
 		
-		String jsonSife = getEnergiaSife(record.v_fonte, record.v_bat, record.i_bat, record.soc, record.fonte, record.erro_ina1, record.erro_ina2, "BACKUP");
-		String jsonPressao = getMedida(record.pressao, "BACKUP");
-		String jsonTemperatura = getMedida(record.temperatura, "BACKUP");
+		String jsonSife = getEnergiaSife(record.v_fonte, record.v_bat, record.i_bat, record.soc, record.fonte, record.erro_ina1, record.erro_ina2, "contingencia");
+		String jsonPressao = getMedida(record.pressao, "contingencia");
+		String jsonTemperatura = getMedida(record.temperatura, "contingencia");
 
 		if (!client.publish(TOPIC_ENERGIA_BACKUP, jsonSife.c_str())) {
 			sucesso = false;
