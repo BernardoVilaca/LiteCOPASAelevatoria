@@ -144,12 +144,12 @@ void processarLeituraEnvio()
   int16_t adc = ads.readADC_SingleEnded(0);
   medidaPressaoAtual = ads.computeVolts(adc) - 0.0024;
   if (medidaPressaoAtual < 0) medidaPressaoAtual = 0.0;
-  JsonPressao = getMedida(medidaPressaoAtual, "REALTIME");
+  JsonPressao = getMedida(medidaPressaoAtual, "tempo_real");
 
   // Obtém Json temperatura 
   medidaTemperaturaAtual = lerTemperaturaFiltrada() - 1.19;
   if (medidaTemperaturaAtual < 0) medidaTemperaturaAtual = 0.0;
-  JsonTemperatura = getMedida(medidaTemperaturaAtual, "REALTIME");
+  JsonTemperatura = getMedida(medidaTemperaturaAtual, "tempo_real");
  
   // Coleta calibrada para os Sensores 1 e 2
   collectSensorSamples(accel1, bufferSensor1, S1_OFF_X, S1_GAIN_X, S1_OFF_Y, S1_GAIN_Y, S1_OFF_Z, S1_GAIN_Z);
@@ -165,8 +165,8 @@ void processarLeituraEnvio()
   Wire.end(); 
   Wire.begin(21, 22);
 
-  // Obtém medidas do SIFE 
-  JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2, "REALTIME");
+  // Obtém medidas do SIFE (Atualizado Unified Namespace)
+  JsonSife = getEnergiaSife(loadvoltage2, loadvoltage1, realCurrent1, SoC, fonte, erro_ina1, erro_ina2, "tempo_real");
 
   jsonSmall.clear();
   jsonLarge.clear();
@@ -240,18 +240,18 @@ void processarLeituraEnvio()
   }
   waitingTime(300);
 
-  // Publicação dos dados dos acelerômetros 
+  // Publicação dos dados dos acelerômetros (Atualizado Unified Namespace)
   Serial.println("[PASSO 4] Enviando dados dos Acelerômetros...");
 
-  if( !enviarDadosAcelerometro(1, bufferSensor1, TOPIC_VIBRA_S1_REAL, "REALTIME") ) {
+  if( !enviarDadosAcelerometro(1, bufferSensor1, TOPIC_VIBRA_S1_REAL, "tempo_real") ) {
     Serial.println("[ACCEL S1] Não foi publicado corretamente.");
   } 
   
-  if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL, "REALTIME") ) {     
+  if( !enviarDadosAcelerometro(2, bufferSensor2, TOPIC_VIBRA_S2_REAL, "tempo_real") ) {     
       Serial.println("[ACCEL S2] Não foi publicado corretamente."); 
   }
 
-  if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL, "REALTIME") ) { 
+  if( !enviarDadosAcelerometro(3, bufferSensor3, TOPIC_VIBRA_S3_REAL, "tempo_real") ) { 
       Serial.println("[ACCEL S3] Não foi publicado corretamente."); 
   }
 
