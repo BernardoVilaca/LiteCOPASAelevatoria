@@ -289,9 +289,9 @@ void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJ
         jsonLarge["s"] = sensorID;
         jsonLarge["p"] = parte + 1;
 
-        JsonArray dataX = jsonLarge.createNestedArray("amostras_x");
-        JsonArray dataY = jsonLarge.createNestedArray("amostras_y");
-        JsonArray dataZ = jsonLarge.createNestedArray("amostras_z");
+        JsonArray dataX = jsonLarge.createNestedArray("x");
+        JsonArray dataY = jsonLarge.createNestedArray("y");
+        JsonArray dataZ = jsonLarge.createNestedArray("z");
         
         for (int i = parte * CHUNK_SIZE; i < (parte * CHUNK_SIZE) + CHUNK_SIZE; i++) {
             dataX.add(bufferRaw[i].x);
