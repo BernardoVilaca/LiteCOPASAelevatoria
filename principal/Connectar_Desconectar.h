@@ -72,25 +72,19 @@ int counterErrorTcp = 0;
 int counterErrorModemInit = 0;
 void waitingTime(const int wait_ms);
 /*******************************************************************************************************************************/
-// Coloca o modem em sleep de baixo consumo via CSCLK + pino DTR.
-// O modem mantém o registro de rede e retoma muito mais rápido do que um boot completo.
-// Chamar sleepModem() é preferível a offModem() quando o ESP32 ficará acordado entre ciclos.
 bool sleepModem()
 {
     Serial.print("[MODEM] Entrando em sleep (CSCLK + DTR): ");
 
-    // Habilita o modo sleep por software no modem
     modem.sendAT("+CSCLK=1");
     if (modem.waitResponse(2000L) != 1) {
         Serial.println("CSCLK=1 falhou — modem pode nao suportar sleep agora.");
         return false;
     }
 
-    // Puxa DTR para LOW
     digitalWrite(MODEM_SLEEP, DTR_SET_SLEEP);
     waitingTime(100);
 
-    // Trava o estado lógico do pino DTR no domínio RTC
     rtc_gpio_hold_en(GPIO_NUM_14);
 
     Serial.println("OK");
@@ -98,29 +92,21 @@ bool sleepModem()
 }
 
 /*******************************************************************************************************************************/
-// Acorda o modem de um sleep anterior (CSCLK/DTR).
-// Deve ser chamado antes de qualquer comunicação AT após sleepModem().
 bool wakeModem()
 {
     Serial.print("[MODEM] Acordando (DTR wake): ");
 
-    // Libera o pino DTR do domínio RTC
     rtc_gpio_hold_dis(GPIO_NUM_14);
 
-    // Puxa DTR para HIGH
     digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
     waitingTime(50);
 
-    // Descarta bytes residuais
     while (SerialAT.available()) SerialAT.read();
 
-    // Confirma que a UART responde
     if (modem.testAT(1500)) {
-        // Desativa o modo sleep por software
         modem.sendAT("+CSCLK=0");
         modem.waitResponse(1000L);
         
-        // Religa o rádio
         modem.sendAT("+CFUN=1");
         modem.waitResponse(5000L);
         
@@ -137,11 +123,10 @@ void sendATCommand(String cmd) {
   Serial.print("Enviando: ");
   Serial.println(cmd);
   
-  modem.sendAT(cmd); // Envia o comando com \r\n automaticamente
+  modem.sendAT(cmd); 
   
-  // Aguarda a resposta por até 2 segundos
   String response = "";
-  if (modem.waitResponse(2000L, response) == 1) { // 1 = OK
+  if (modem.waitResponse(2000L, response) == 1) { 
     Serial.print("Resposta: ");
     Serial.println(response);
   } else {
@@ -158,12 +143,10 @@ bool powerModem() {
     return true;
   }
 
-    // Se não respondeu, aí sim damos o pulso
     digitalWrite(MODEM_PWRKEY, LOW);
     waitingTime(1500); 
     digitalWrite(MODEM_PWRKEY, HIGH);
     
-    // Aguarda o boot e limpa o buffer
     waitingTime(5000);
     while(SerialAT.available()) SerialAT.read();
     return true;
@@ -173,7 +156,7 @@ bool powerModem() {
 bool offModem()
 {
     modem.gprsDisconnect();
-    modem.sendAT("+CPOF");      // Comando AT para desligar modem
+    modem.sendAT("+CPOF");      
 
     if (modem.waitResponse(8000L) == 1) {
         Serial.println("[MODEM] Power OFF via AT");
@@ -183,14 +166,14 @@ bool offModem()
     return false;
 }
 
-// adakhsgauisd **********************************************************************************************************
+// Espera com watchdog **********************************************************************************************************
 void waitingTime(const int wait_ms) 
 {
 esp_task_wdt_reset();
 uint32_t start = millis();
 while ((uint32_t)(millis() - start) < wait_ms) {
     client.loop();
-    yield();  // só por precaucao
+    yield();  
 }
 }
 
@@ -207,19 +190,16 @@ bool checkIP()
 }
 
 /*******************************************************************************************************************************/
-// Função que inicializa o modem e faz a ligação com o Broker MQTT.
 bool conectarRedeEbroker() 
 {
     esp_task_wdt_reset(); 
     Serial.println("  -> [REDE] Ligando a interface do chip 4G...");
 
-    // Tenta acordar o modem caso esteja em sleep do ciclo anterior.
     wakeModem();
     powerModem();
     SerialAT.println("AT");
     waitingTime(3000);
     
-    // Verifica inicialização correta do GSM
     if (!modem.init()) {
         Serial.println("  -> [REDE] ERRO: O modem nao respondeu.");
         
@@ -234,10 +214,8 @@ bool conectarRedeEbroker()
         return false;
     }
 
-    // Zera o contador se iniciou com sucesso
     counterErrorModemInit = 0;
 
-    // Apenas LTE
     if (!modem.setNetworkMode((NetworkMode)38)) {
         Serial.println("  -> [REDE] ERRO: Não foi setado Network mode corretamente");
     }
@@ -265,7 +243,6 @@ bool conectarRedeEbroker()
 
     Serial.println("  -> [REDE] Conectando ao Servidor MQTT na nuvem...");
     
-    // LAÇO DE RECONEXÃO MQTT (Até 3 tentativas antes de falhar o ciclo)
     int mqttRetries = 0;
     while (mqttRetries < 3) {
         esp_task_wdt_reset();
@@ -275,14 +252,11 @@ bool conectarRedeEbroker()
         } else {
             Serial.printf("  -> [REDE] Erro MQTT (Tentativa %d de 3). Codigo: %i\n", mqttRetries + 1, client.state());
             mqttRetries++;
-            
-            // Aguarda 2 segundos antes de tentar de novo alimentando o watchdog
             unsigned long waitTime = millis();
             while(millis() - waitTime < 2000) { esp_task_wdt_reset(); waitingTime(10); }
         }
     }
 
-    // Tratamento de falhas TCP contínuas (State -2)
     if(client.state() == -2) {
         counterErrorTcp++;
     }
@@ -296,16 +270,15 @@ bool conectarRedeEbroker()
     return false;
 }
 /*******************************************************************************************************************************/
-// Função que desconecta o client MQTT e o modem do GPRS.
 void desconectarRede() 
 {
     if (client.connected()) client.disconnect();
-    sleepModem();   // Mantém contexto de rede; acorda muito mais rápido no próximo ciclo
+    sleepModem();   
     Serial.println("  -> [REDE] Modem em sleep.");
 }
 
 /*******************************************************************************************************************************/
-// Função que processa Json de vibração (acelerômetro) 
+// Atualizado com o Novo Padrão (Unified Namespace) para os arrays de vibração
 void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJsons[], const char* tipoMensagem)
 {
     for (int parte = 0; parte < NUM_AMOSTRAS / CHUNK_SIZE; parte++)
@@ -316,9 +289,9 @@ void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJ
         jsonLarge["s"] = sensorID;
         jsonLarge["p"] = parte + 1;
 
-        JsonArray dataX = jsonLarge.createNestedArray("x");
-        JsonArray dataY = jsonLarge.createNestedArray("y");
-        JsonArray dataZ = jsonLarge.createNestedArray("z");
+        JsonArray dataX = jsonLarge.createNestedArray("amostras_x");
+        JsonArray dataY = jsonLarge.createNestedArray("amostras_y");
+        JsonArray dataZ = jsonLarge.createNestedArray("amostras_z");
         
         for (int i = parte * CHUNK_SIZE; i < (parte * CHUNK_SIZE) + CHUNK_SIZE; i++) {
             dataX.add(bufferRaw[i].x);
@@ -332,9 +305,6 @@ void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJ
     }
 }
 
-
-/******************************************************************************************************************/
-// Função dedicada para formatar e enviar os dados de um acelerômetro específico
 /******************************************************************************************************************/
 bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const char* topic, const char* tipoMensagem) {
   String jsonsVibracaoTemp[NUM_AMOSTRAS/CHUNK_SIZE];
@@ -345,7 +315,6 @@ bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const ch
 
   for (int i = 0; i < NUM_AMOSTRAS/CHUNK_SIZE; i++) {
     esp_task_wdt_reset(); 
-    
     
     if( !client.publish(topic, jsonsVibracaoTemp[i].c_str()) ) {
       sucessoTotal = false; 
@@ -359,7 +328,6 @@ bool enviarDadosAcelerometro(int sensorId, AmostraAcelerometro *buffer, const ch
 }
 
 /********************************************************************************************************/
-// Obtém medida criptografada 
 String getMedida(float medida, const char* tipoMensagem)
 {
     jsonSmall.clear();
@@ -372,18 +340,18 @@ String getMedida(float medida, const char* tipoMensagem)
 }
 
 /************************************************************************************************************************ */
-// Obtém dados de energia 
+// Atualizado com o Novo Padrão (Unified Namespace) para o payload de energia
 String getEnergiaSife(float v_f, float v_b, float i_b, float s, int r, bool e1, bool e2, const char* tipoMensagem)
 {
     jsonSmall.clear();
     jsonSmall["tipo"] = tipoMensagem; 
-    jsonSmall["V_Fonte"] = v_f;
-    jsonSmall["V_Bat"] = v_b;
+    jsonSmall["tensao_fonte"] = v_f;
+    jsonSmall["tensao_bateria"] = v_b;
     jsonSmall["I_Bat"] = i_b; 
-    jsonSmall["SoC"] = s;
-    jsonSmall["RedeAC"] = r;
-    jsonSmall["INA1_Err"] = e1; 
-    jsonSmall["INA2_Err"] = e2;
+    jsonSmall["estado_carga_bateria"] = s;
+    jsonSmall["rede_corrente_alternada"] = r;
+    jsonSmall["erro_sensor_ina_1"] = e1; 
+    jsonSmall["erro_sensor_ina_2"] = e2;
     String jsonString;
     serializeJson(jsonSmall, jsonString);
     String cipher = crypto.encryptString(jsonString);
