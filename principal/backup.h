@@ -65,9 +65,9 @@ static bool enviarVibracaoBackup(int sensorId, const AmostraAcelerometro *buffer
 	jsonLarge["p"] = 1;
 	jsonLarge["n"] = BACKUP_NUM_AMOSTRAS;
 
-	JsonArray dataX = jsonLarge.createNestedArray("amostras_x");
-	JsonArray dataY = jsonLarge.createNestedArray("amostras_y");
-	JsonArray dataZ = jsonLarge.createNestedArray("amostras_z");
+	JsonArray dataX = jsonLarge.createNestedArray("x");
+	JsonArray dataY = jsonLarge.createNestedArray("y");
+	JsonArray dataZ = jsonLarge.createNestedArray("z");
 
 	for (int i = 0; i < BACKUP_NUM_AMOSTRAS; i++) {
 		dataX.add(buffer[i].x);
