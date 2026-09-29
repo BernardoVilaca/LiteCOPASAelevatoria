@@ -16,6 +16,22 @@ Adafruit_ADXL345_Unified accel2(12346);
 Adafruit_ADXL345_Unified accel3(12347);
 Adafruit_ADS1115 ads;                   
 
+// Constantes de Calibração Metrológica (Offset e Ganho) **********************
+// Sensor 1 (SDA 21 / SCL 22 - Endereço 0x53)
+const float S1_OFF_X = -0.110; const float S1_GAIN_X = 1.013;
+const float S1_OFF_Y = 0.200;  const float S1_GAIN_Y = 0.994;
+const float S1_OFF_Z = 0.655;  const float S1_GAIN_Z = 1.041;
+
+// Sensor 2 (SDA 21 / SCL 22 - Endereço 0x1D)
+const float S2_OFF_X = 0.745;  const float S2_GAIN_X = 0.994;
+const float S2_OFF_Y = 0.110;  const float S2_GAIN_Y = 0.973;
+const float S2_OFF_Z = -0.125; const float S2_GAIN_Z = 0.978;
+
+// Sensor 3 (SDA 25 / SCL 26 - Endereço 0x1D)
+const float S3_OFF_X = 0.120;  const float S3_GAIN_X = 1.001;
+const float S3_OFF_Y = -0.130; const float S3_GAIN_Y = 1.007;
+const float S3_OFF_Z = 0.020;  const float S3_GAIN_Z = 1.018;
+
 // Pinagem termopar ******************************************
 const int thermoSO = 19;
 const int thermoCS = 5;   
@@ -93,16 +109,23 @@ void clearI2C(int sda, int scl) {
 }
 
 /***************************************************************************************************************/
-void collectSensorSamples(Adafruit_ADXL345_Unified &accel, AmostraAcelerometro *buffer) {
+// Função atualizada para aplicar dinamicamente o Fator de Escala e o Desvio de Zero a cada eixo
+void collectSensorSamples(Adafruit_ADXL345_Unified &accel, AmostraAcelerometro *buffer, 
+                          float offX, float gainX, float offY, float gainY, float offZ, float gainZ) {
   for (int i = 0; i < NUM_AMOSTRAS; ++i) 
   {
     esp_task_wdt_reset();
     sensors_event_t e;
     accel.getEvent(&e);
     
-    buffer[i].x = (int16_t)(e.acceleration.x * 100);
-    buffer[i].y = (int16_t)(e.acceleration.y * 100);
-    buffer[i].z = (int16_t)(e.acceleration.z * 100);
+    // Aplicação da calibração sistemática: I_corrigida = (I_lida - Offset) * Ganho
+    float x_cal = (e.acceleration.x - offX) * gainX;
+    float y_cal = (e.acceleration.y - offY) * gainY;
+    float z_cal = (e.acceleration.z - offZ) * gainZ;
+    
+    buffer[i].x = (int16_t)(x_cal * 100);
+    buffer[i].y = (int16_t)(y_cal * 100);
+    buffer[i].z = (int16_t)(z_cal * 100);
   }
 }
 
@@ -124,16 +147,22 @@ void processarLeituraEnvio()
   JsonPressao = getMedida(medidaPressaoAtual, "REALTIME");
 
   // Obtém Json temperatura 
-  medidaTemperaturaAtual = lerTemperaturaFiltrada();
+  medidaTemperaturaAtual = lerTemperaturaFiltrada() - 1.19;
   if (medidaTemperaturaAtual < 0) medidaTemperaturaAtual = 0.0;
   JsonTemperatura = getMedida(medidaTemperaturaAtual, "REALTIME");
  
-  collectSensorSamples(accel1, bufferSensor1);
-  collectSensorSamples(accel2, bufferSensor2);
+  // Coleta calibrada para os Sensores 1 e 2
+  collectSensorSamples(accel1, bufferSensor1, S1_OFF_X, S1_GAIN_X, S1_OFF_Y, S1_GAIN_Y, S1_OFF_Z, S1_GAIN_Z);
+  collectSensorSamples(accel2, bufferSensor2, S2_OFF_X, S2_GAIN_X, S2_OFF_Y, S2_GAIN_Y, S2_OFF_Z, S2_GAIN_Z);
 
+  // Liberta a memória I2C anterior para evitar memory leak (travar o ESP32)
+  Wire.end(); 
   Wire.begin(25, 26);
-  collectSensorSamples(accel3, bufferSensor3);
+  // Coleta calibrada para o Sensor 3
+  collectSensorSamples(accel3, bufferSensor3, S3_OFF_X, S3_GAIN_X, S3_OFF_Y, S3_GAIN_Y, S3_OFF_Z, S3_GAIN_Z);
 
+  // Restaura o barramento principal para as próximas rotinas
+  Wire.end(); 
   Wire.begin(21, 22);
 
   // Obtém medidas do SIFE 
@@ -236,7 +265,7 @@ void setup()
 {
   Serial.begin(BAUD_RATE);
 
-clearI2C(21, 22); 
+  clearI2C(21, 22); 
   clearI2C(25, 26); 
 
   Wire.begin(21, 22); 
@@ -246,9 +275,11 @@ clearI2C(21, 22);
   accel1.begin(0x53);
   accel2.begin(0x1D);
 
+  Wire.end();
   Wire.begin(25, 26);
   accel3.begin(0x1D);
 
+  Wire.end();
   Wire.begin(21, 22);
   delay(100);
 
