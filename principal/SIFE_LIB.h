@@ -15,7 +15,7 @@
 // --- Mapeamento de Hardware ---
 // ========================================================================================================
 #define MOS_PIM 14             // Pino de controle do MOSFET (vai ligado em E, de enable)
-#define PWM_PIN 27             // Pino de saída do PWM (vai ligado em P, de PWM)
+#define PWM_PIN 27            // Pino de saída do PWM (vai ligado em P, de PWM)
 #define WAKEUP_PIN GPIO_NUM_34 // Pino que detecta o retorno da rede AC
 
 // Endereços I2C dos sensores INA219
@@ -101,8 +101,8 @@ float cvVoltage = 14.4;
 int chargeState = PRECHARGE; 
 
 // Shunts e Leituras Reais
-float R_Shunt1 = 0.122; 
-float R_Shunt2 = 0.129; 
+float R_Shunt1 = 0.1; 
+float R_Shunt2 = 0.1; 
 float realCurrent1 = 0; 
 float realCurrent2 = 0; 
 float loadvoltage1 = 0; 
@@ -205,8 +205,6 @@ void SIFE_Setup() {
     Serial.println("[SIFE - OK] Sensores de Energia INA219 operacionais!");
     erro_ina1 = false;
     erro_ina2 = false;
-    ina219_1.setCalibration_32V_1A();
-    ina219_2.setCalibration_32V_1A();
   }
   
   // 3. Força uma leitura imediata dos INAs para alimentar as variáveis de tensão antes do cálculo do SoC
