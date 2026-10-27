@@ -183,8 +183,8 @@ void processarLeituraEnvio()
           Serial.println("  -> [REDE] IP Invalido ou Dead Socket (MQTT) detectado.");
           Serial.println("  -> [REDE] Tentando reconexao forcada (1x)...");
           
-          desconectarRede();
           modem.gprsDisconnect(); // Força a queda do PDP Context
+          desconectarRede();
           waitingTime(2000);
           
           conexaoEstabelecida = conectarRedeEbroker();
@@ -282,7 +282,9 @@ void setup()
   Wire.end();
   Wire.begin(21, 22);
   delay(100);
-
+  rtc_gpio_hold_dis(GPIO_NUM_14);
+  rtc_gpio_hold_dis((gpio_num_t)MODEM_SLEEP);
+  gpio_deep_sleep_hold_dis();
   Backup_Begin();
   SIFE_Setup();
 
