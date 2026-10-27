@@ -284,10 +284,11 @@ void iniciarDeepSleep() {
     esp_sleep_enable_timer_wakeup(TEMPO_DE_SONO_LOADED * SEGUNDOS_PARA_MICROSEGUNDOS);
     Serial.println("Configurando o ESP32 para dormir por " + String(TEMPO_DE_SONO_LOADED) + " segundos. Bateria com carga OK");
   }
+  gpio_deep_sleep_hold_en(); // Mantém o hold dos pinos digitais/RTC durante o Deep Sleep
   Serial.println("Indo dormir agora...");
   Serial.flush();
   esp_deep_sleep_start();
-}  
+} 
 
 /*********************************************************************************************************
 * @brief Função de arredontamento customizada para estabilização de leitura de tensão
