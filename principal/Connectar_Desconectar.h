@@ -78,32 +78,31 @@ bool sleepModem()
 
     modem.sendAT("+CSCLK=1");
     if (modem.waitResponse(2000L) != 1) {
-        Serial.println("CSCLK=1 falhou — modem pode nao suportar sleep agora.");
-        return false;
+        Serial.println("CSCLK=1 sem confirmação AT — forçando DTR LOW.");
+    } else {
+        Serial.println("OK");
     }
 
+    // Garante que o pino vai para 0V mesmo se a UART não tiver respondido
     digitalWrite(MODEM_SLEEP, DTR_SET_SLEEP);
     waitingTime(100);
+    rtc_gpio_hold_en((gpio_num_t)MODEM_SLEEP);
 
-    rtc_gpio_hold_en(GPIO_NUM_14);
-
-    Serial.println("OK");
     return true;
 }
 
-/*******************************************************************************************************************************/
 bool wakeModem()
 {
     Serial.print("[MODEM] Acordando (DTR wake): ");
 
-    rtc_gpio_hold_dis(GPIO_NUM_14);
+    rtc_gpio_hold_dis((gpio_num_t)MODEM_SLEEP);
 
     digitalWrite(MODEM_SLEEP, DTR_SET_WAKE);
-    waitingTime(50);
+    waitingTime(300); // Tempo aumentado de 50ms para 300ms para estabilizar a UART
 
     while (SerialAT.available()) SerialAT.read();
 
-    if (modem.testAT(1500)) {
+    if (modem.testAT(3000)) {
         modem.sendAT("+CSCLK=0");
         modem.waitResponse(1000L);
         
@@ -116,6 +115,22 @@ bool wakeModem()
 
     Serial.println("sem resposta (pode estar desligado).");
     return false;
+}
+
+bool offModem()
+{
+    wakeModem();
+    modem.gprsDisconnect();
+
+    // Desliga apenas o rádio RF (CFUN=0) em vez de desligar o chip (CPOF)
+    modem.sendAT("+CFUN=0");      
+    if (modem.waitResponse(5000L) == 1) {
+        Serial.println("[MODEM] Radio RF desligado (CFUN=0).");
+    } else {
+        Serial.println("[OFF MODEM] AT+CFUN=0 sem resposta.");
+    }
+
+    return sleepModem();
 }
 
 // Envia Comandos AT *************************************************************************************************
@@ -152,20 +167,6 @@ bool powerModem() {
     return true;
 }
 
-// Desliga o modem **********************************************************************************************************
-bool offModem()
-{
-    modem.gprsDisconnect();
-    modem.sendAT("+CPOF");      
-
-    if (modem.waitResponse(8000L) == 1) {
-        Serial.println("[MODEM] Power OFF via AT");
-        return true;
-    }
-    Serial.println("[OFF MODEM] AT+CPOF falhou. Pulso fisico abortado para evitar dessincronizacao.");
-    return false;
-}
-
 // Espera com watchdog **********************************************************************************************************
 void waitingTime(const int wait_ms) 
 {
@@ -192,13 +193,14 @@ bool checkIP()
 /*******************************************************************************************************************************/
 bool conectarRedeEbroker() 
 {
-    esp_task_wdt_reset(); 
+   esp_task_wdt_reset(); 
     Serial.println("  -> [REDE] Ligando a interface do chip 4G...");
 
-    wakeModem();
-    powerModem();
-    SerialAT.println("AT");
-    waitingTime(3000);
+    if (!wakeModem()) {
+        powerModem();
+        SerialAT.println("AT");
+        waitingTime(3000);
+    }
     
     if (!modem.init()) {
         Serial.println("  -> [REDE] ERRO: O modem nao respondeu.");
@@ -289,9 +291,9 @@ void getVibracao(const int sensorID, AmostraAcelerometro* bufferRaw, String outJ
         jsonLarge["s"] = sensorID;
         jsonLarge["p"] = parte + 1;
 
-        JsonArray dataX = jsonLarge.createNestedArray("x");
-        JsonArray dataY = jsonLarge.createNestedArray("y");
-        JsonArray dataZ = jsonLarge.createNestedArray("z");
+        JsonArray dataX = jsonLarge.createNestedArray("amostras_x");
+        JsonArray dataY = jsonLarge.createNestedArray("amostras_y");
+        JsonArray dataZ = jsonLarge.createNestedArray("amostras_z");
         
         for (int i = parte * CHUNK_SIZE; i < (parte * CHUNK_SIZE) + CHUNK_SIZE; i++) {
             dataX.add(bufferRaw[i].x);
