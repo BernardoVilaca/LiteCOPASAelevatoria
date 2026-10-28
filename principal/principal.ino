@@ -277,7 +277,15 @@ void setup()
 
   Wire.end();
   Wire.begin(25, 26);
-  accel3.begin(0x1D);
+ if (accel3.begin(0x1D)) {
+    Serial.println("[OK] Accel 3 iniciado em 0x1D (pinos 25/26).");
+    accel3.setDataRate(ADXL345_DATARATE_3200_HZ);
+  } else if (accel3.begin(0x53)) {
+    Serial.println("[OK] Accel 3 iniciado em 0x53 (pinos 25/26) -> Pino SDO esta em GND/aberto.");
+    accel3.setDataRate(ADXL345_DATARATE_3200_HZ);
+  } else {
+    Serial.println("[ERRO] Accel 3 NAO respondeu nem em 0x1D nem em 0x53 nos pinos 25/26! Verifique fios/solda.");
+  }
 
   Wire.end();
   Wire.begin(21, 22);
